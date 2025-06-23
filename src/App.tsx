@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import AuthenticatedLayout from "./components/layout/AuthenticatedLayout";
+import { AuthenticatedAppLayout } from "./layouts/AuthenticatedAppLayout";
 import ScrollToTop from "./components/ScrollToTop";
 import Home from "./pages/Home";
 import YouBuild from "./pages/YouBuild";
@@ -20,6 +21,8 @@ import Onboarding from "./pages/Onboarding";
 import YouBuildApp from "./pages/app/YouBuildApp";
 import WeBuildApp from "./pages/app/WeBuildApp";
 import BuildTogetherApp from "./pages/app/BuildTogetherApp";
+import { YouBuildDashboard } from "./pages/app/YouBuildDashboard";
+import { AskFlexiChat } from "./components/app/AskFlexiChat";
 
 const queryClient = new QueryClient();
 
@@ -46,12 +49,13 @@ const App = () => (
           <Route path="/signup" element={<Signup />} />
           <Route path="/onboarding" element={<Onboarding />} />
           
-          {/* Authenticated routes */}
-          <Route path="/app" element={<AuthenticatedLayout />}>
-            <Route path="you-build/*" element={<YouBuildApp />} />
-            <Route path="we-build/*" element={<WeBuildApp />} />
-            <Route path="build-together/*" element={<BuildTogetherApp />} />
-            <Route index element={<YouBuildApp />} />
+          {/* Authenticated routes - New Enhanced Layout */}
+          <Route path="/app" element={<AuthenticatedAppLayout />}>
+            <Route path="you-build" element={<YouBuildDashboard />} />
+            <Route path="you-build/ask-flexi" element={<AskFlexiChat />} />
+            <Route path="we-build" element={<WeBuildApp />} />
+            <Route path="build-together" element={<BuildTogetherApp />} />
+            <Route index element={<YouBuildDashboard />} />
           </Route>
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
