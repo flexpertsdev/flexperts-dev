@@ -100,7 +100,7 @@ export const CleanAppSidebar = ({ onModeSwitch, currentMode }: CleanAppSidebarPr
           <DropdownMenuTrigger asChild>
             <Button 
               variant="ghost" 
-              className="w-full p-3 bg-gray-50 hover:bg-gray-100 h-auto rounded-lg"
+              className="w-full p-3 bg-gray-50 hover:bg-gray-100 h-auto rounded-lg min-h-touch touch-manipulation"
             >
               <div className="flex items-center justify-between w-full">
                 <div className="flex items-center">
@@ -153,7 +153,7 @@ export const CleanAppSidebar = ({ onModeSwitch, currentMode }: CleanAppSidebarPr
         {/* Ask Flexi Button - Big and visually standout */}
         <Button 
           onClick={() => navigate(`/app/${currentMode}/ask-flexi`)}
-          className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg mt-4 transition-all"
+          className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg mt-4 transition-all min-h-touch touch-manipulation"
         >
           <MessageSquare className="w-5 h-5 mr-2" />
           Ask Flexi
@@ -167,7 +167,7 @@ export const CleanAppSidebar = ({ onModeSwitch, currentMode }: CleanAppSidebarPr
             placeholder="Search spaces..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-gray-50 rounded-lg text-sm focus:bg-white focus:ring-2 focus:ring-green-200 transition-all"
+            className="w-full pl-10 pr-4 py-2 bg-gray-50 rounded-lg text-sm focus:bg-white focus:ring-2 focus:ring-green-200 transition-all h-touch touch-manipulation"
           />
         </div>
       </div>
@@ -179,7 +179,7 @@ export const CleanAppSidebar = ({ onModeSwitch, currentMode }: CleanAppSidebarPr
             <div
               key={space.id}
               className={cn(
-                "mb-1 p-3 rounded-lg cursor-pointer transition-colors",
+                "mb-1 p-3 rounded-lg cursor-pointer transition-colors touch-manipulation",
                 space.isActive ? "bg-green-50" : "hover:bg-gray-50"
               )}
               onClick={() => navigate(`/app/${currentMode}/space/${space.id}`)}
@@ -221,7 +221,7 @@ export const CleanAppSidebar = ({ onModeSwitch, currentMode }: CleanAppSidebarPr
           ))}
 
           {/* Add Space Button - Inline and simple */}
-          <button className="w-full mt-2 p-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-green-500 hover:text-green-600 transition-colors">
+          <button className="w-full mt-2 p-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-green-500 hover:text-green-600 transition-colors min-h-touch touch-manipulation">
             <div className="flex items-center justify-center">
               <Plus className="w-5 h-5 mr-2" />
               Create New Space
@@ -236,7 +236,7 @@ export const CleanAppSidebar = ({ onModeSwitch, currentMode }: CleanAppSidebarPr
           <button 
             onClick={() => onModeSwitch('you-build')}
             className={cn(
-              "flex-1 px-3 py-2 rounded-md text-sm font-medium transition-all",
+              "flex-1 px-3 py-2 rounded-md text-sm font-medium transition-all min-h-touch touch-manipulation",
               currentMode === 'you-build' 
                 ? "bg-white text-green-600 shadow-sm" 
                 : "text-gray-600 hover:text-gray-900"
@@ -247,7 +247,7 @@ export const CleanAppSidebar = ({ onModeSwitch, currentMode }: CleanAppSidebarPr
           <button 
             onClick={() => onModeSwitch('we-build')}
             className={cn(
-              "flex-1 px-3 py-2 rounded-md text-sm font-medium transition-all",
+              "flex-1 px-3 py-2 rounded-md text-sm font-medium transition-all min-h-touch touch-manipulation",
               currentMode === 'we-build' 
                 ? "bg-white text-green-600 shadow-sm" 
                 : "text-gray-600 hover:text-gray-900"
@@ -258,7 +258,7 @@ export const CleanAppSidebar = ({ onModeSwitch, currentMode }: CleanAppSidebarPr
           <button 
             onClick={() => onModeSwitch('build-together')}
             className={cn(
-              "flex-1 px-3 py-2 rounded-md text-sm font-medium transition-all",
+              "flex-1 px-3 py-2 rounded-md text-sm font-medium transition-all min-h-touch touch-manipulation",
               currentMode === 'build-together' 
                 ? "bg-white text-green-600 shadow-sm" 
                 : "text-gray-600 hover:text-gray-900"

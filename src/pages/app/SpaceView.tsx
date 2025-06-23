@@ -73,7 +73,7 @@ I can generate the complete implementation for you.`,
     {
       id: '5',
       type: 'bot',
-      content: 'Perfect! I've generated a complete authentication system for you. Here are the components:',
+      content: 'Perfect! Ive generated a complete authentication system for you. Here are the components:'
       timestamp: 'Yesterday at 3:49 PM',
       attachments: [
         {
@@ -137,7 +137,7 @@ I can generate the complete implementation for you.`,
             <Badge variant="outline" className="text-green-600 border-green-600">
               AI Enhanced
             </Badge>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="min-h-touch touch-manipulation">
               <MoreVertical className="w-5 h-5" />
             </Button>
           </div>
@@ -150,7 +150,7 @@ I can generate the complete implementation for you.`,
           <div key={message.id}>
             {message.type === 'context' ? (
               // Context message - centered
-              <div className="flex justify-center">
+              <div className="flex justify-center animate-fade-in">
                 <div className="bg-gray-100 rounded-full px-4 py-1.5 text-sm text-gray-600">
                   {message.content}
                 </div>
@@ -158,7 +158,7 @@ I can generate the complete implementation for you.`,
             ) : (
               // Regular message
               <div className={cn(
-                "flex gap-3",
+                "flex gap-3 animate-fade-in",
                 message.type === 'user' && "flex-row-reverse"
               )}>
                 {message.type === 'bot' && (
@@ -172,7 +172,7 @@ I can generate the complete implementation for you.`,
                   message.type === 'user' && "items-end"
                 )}>
                   <div className={cn(
-                    "rounded-lg p-4",
+                    "message-bubble",
                     message.type === 'user' 
                       ? "bg-green-500 text-white" 
                       : "bg-gray-100 text-gray-900"
@@ -186,7 +186,7 @@ I can generate the complete implementation for you.`,
                           <div 
                             key={idx}
                             className={cn(
-                              "flex items-center gap-2 p-2 rounded",
+                              "flex items-center gap-2 p-2 rounded-mobile touch-manipulation",
                               message.type === 'user' 
                                 ? "bg-green-600/20" 
                                 : "bg-white"
@@ -230,7 +230,7 @@ I can generate the complete implementation for you.`,
       {/* Input Area */}
       <div className="bg-white border-t border-gray-200 p-4">
         <div className="flex items-end gap-2">
-          <Button variant="ghost" size="icon" className="mb-1">
+          <Button variant="ghost" size="icon" className="mb-1 min-h-touch touch-manipulation">
             <Paperclip className="w-5 h-5" />
           </Button>
           
@@ -245,7 +245,7 @@ I can generate the complete implementation for you.`,
                   handleSend();
                 }
               }}
-              className="min-h-[44px] max-h-[120px] resize-none"
+              className="min-h-touch max-h-[120px] resize-none rounded-mobile touch-manipulation"
               rows={1}
             />
           </div>
@@ -254,7 +254,7 @@ I can generate the complete implementation for you.`,
             onClick={handleSend}
             disabled={!input.trim()}
             size="icon"
-            className="mb-1"
+            className="mb-1 min-h-touch touch-manipulation"
           >
             <Send className="w-4 h-4" />
           </Button>

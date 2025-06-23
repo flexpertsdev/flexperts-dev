@@ -65,9 +65,9 @@ export const YouBuildDashboard = () => {
   };
 
   return (
-    <div className="flex-1">
+    <div className="flex-1 flex flex-col h-full overflow-hidden">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
+      <div className="bg-white border-b border-gray-200 px-6 py-4 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">You Build Dashboard</h1>
@@ -81,7 +81,7 @@ export const YouBuildDashboard = () => {
       </div>
 
       {/* Content */}
-      <div className="p-6">
+      <div className="flex-1 overflow-y-auto p-6">
         {/* AI Tools */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <Card className="hover:shadow-lg transition-shadow cursor-pointer group">

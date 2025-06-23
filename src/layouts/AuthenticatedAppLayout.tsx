@@ -20,13 +20,11 @@ export const AuthenticatedAppLayout = () => {
   const handleModeSwitch = (mode: string) => {
     navigate(`/app/${mode}`);
     // Close sidebar on mobile after switching
-    if (window.innerWidth < 768) {
-      setIsSidebarOpen(false);
-    }
+    setIsSidebarOpen(false);
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex h-dvh overflow-hidden bg-gray-50">
       {/* Mobile sidebar overlay */}
       <div 
         className={cn(
@@ -36,9 +34,9 @@ export const AuthenticatedAppLayout = () => {
         onClick={() => setIsSidebarOpen(false)}
       />
       
-      {/* Sidebar */}
+      {/* Sidebar - CSS-driven responsive behavior */}
       <div className={cn(
-        "fixed md:relative h-full z-50 transition-transform md:translate-x-0",
+        "fixed md:relative h-full z-50 transition-transform md:transition-none md:translate-x-0 w-64 flex-shrink-0",
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <AppSidebar 

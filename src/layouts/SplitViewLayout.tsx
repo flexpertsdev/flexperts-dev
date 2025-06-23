@@ -24,7 +24,7 @@ export const SplitViewLayout = ({ showAIChat = true }: SplitViewLayoutProps) => 
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex h-dvh overflow-hidden bg-gray-50">
       {/* Mobile sidebar overlay */}
       <div 
         className={cn(
@@ -34,9 +34,9 @@ export const SplitViewLayout = ({ showAIChat = true }: SplitViewLayoutProps) => 
         onClick={() => setIsSidebarOpen(false)}
       />
       
-      {/* Left Sidebar - Spaces */}
+      {/* Left Sidebar - Spaces - CSS-driven responsive */}
       <div className={cn(
-        "fixed md:relative h-full z-50 transition-transform md:transition-none md:translate-x-0",
+        "fixed md:relative h-full z-50 transition-transform md:transition-none md:translate-x-0 w-64 flex-shrink-0",
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <CleanAppSidebar 
@@ -89,9 +89,9 @@ export const SplitViewLayout = ({ showAIChat = true }: SplitViewLayoutProps) => 
         </div>
       </main>
 
-      {/* Right Sidebar - AI Chat (Desktop only) */}
+      {/* Right Sidebar - AI Chat (Desktop only) - CSS-driven responsive */}
       {isAIChatOpen && (
-        <div className="hidden md:block">
+        <div className="hidden md:block w-96 flex-shrink-0">
           <AIChatSidebar 
             onClose={() => setIsAIChatOpen(false)}
             context={{

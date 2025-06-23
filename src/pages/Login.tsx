@@ -22,7 +22,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-neutral-50 to-primary-50/20 p-4">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md card">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
             <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center">
@@ -46,7 +46,7 @@ const Login = () => {
                   placeholder="john@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 h-touch rounded-mobile touch-manipulation"
                   required
                 />
               </div>
@@ -61,7 +61,7 @@ const Login = () => {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 h-touch rounded-mobile touch-manipulation"
                   required
                 />
               </div>
@@ -89,7 +89,7 @@ const Login = () => {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full min-h-touch px-4 rounded-mobile touch-manipulation">
               Sign in
             </Button>
             <div className="relative">
@@ -103,7 +103,7 @@ const Login = () => {
             <Button
               type="button"
               variant="outline"
-              className="w-full"
+              className="w-full min-h-touch px-4 rounded-mobile touch-manipulation"
               onClick={() => navigate("/onboarding")}
             >
               <MessageSquare className="w-4 h-4 mr-2" />

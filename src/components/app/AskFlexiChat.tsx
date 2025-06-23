@@ -130,7 +130,7 @@ What would you like to build today?`,
             {onBack && (
               <button 
                 onClick={onBack}
-                className="mr-4 p-2 hover:bg-gray-100 rounded-lg md:hidden"
+                className="mr-4 p-2 hover:bg-gray-100 rounded-lg md:hidden min-h-touch touch-manipulation"
               >
                 <ArrowLeft className="w-6 h-6" />
               </button>
@@ -143,7 +143,7 @@ What would you like to build today?`,
               <p className="text-sm text-green-600">Always here to help</p>
             </div>
           </div>
-          <button className="p-2 hover:bg-gray-100 rounded-lg">
+          <button className="p-2 hover:bg-gray-100 rounded-lg min-h-touch touch-manipulation">
             <MoreVertical className="w-6 h-6" />
           </button>
         </div>
@@ -185,7 +185,7 @@ What would you like to build today?`,
             )}
             
             <div className={cn(
-              "max-w-[70%]",
+              "max-w-[70%] message-bubble animate-fade-in",
               message.type === 'user' 
                 ? "bg-green-500 text-white rounded-[18px_18px_4px_18px]" 
                 : "bg-gray-100 text-gray-900 rounded-[18px_18px_18px_4px]"
@@ -200,7 +200,7 @@ What would you like to build today?`,
                       variant="outline"
                       size="sm"
                       className={cn(
-                        "w-full justify-start",
+                        "w-full justify-start min-h-touch touch-manipulation",
                         message.type === 'user' 
                           ? "border-white/20 text-white hover:bg-white/10" 
                           : "bg-white"
@@ -244,7 +244,7 @@ What would you like to build today?`,
       {/* Chat Input */}
       <div className="bg-white border-t border-gray-200 p-4">
         <div className="flex items-end space-x-2">
-          <button className="p-2 hover:bg-gray-100 rounded-lg">
+          <button className="p-2 hover:bg-gray-100 rounded-lg min-h-touch touch-manipulation">
             <Paperclip className="w-6 h-6 text-gray-600" />
           </button>
           
@@ -255,22 +255,22 @@ What would you like to build today?`,
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="w-full resize-none bg-gray-100 rounded-lg focus:bg-white focus:ring-2 focus:ring-green-200 min-h-[44px] max-h-[120px]"
+              className="w-full resize-none bg-gray-100 rounded-lg focus:bg-white focus:ring-2 focus:ring-green-200 min-h-touch max-h-[120px] touch-manipulation"
               rows={1}
             />
           </div>
 
-          <button className="p-2 hover:bg-gray-100 rounded-lg">
+          <button className="p-2 hover:bg-gray-100 rounded-lg min-h-touch touch-manipulation">
             <Smile className="w-6 h-6 text-gray-600" />
           </button>
           
-          <button className="p-2 hover:bg-gray-100 rounded-lg">
+          <button className="p-2 hover:bg-gray-100 rounded-lg min-h-touch touch-manipulation">
             <Mic className="w-6 h-6 text-gray-600" />
           </button>
           
           <Button 
             onClick={handleSend}
-            className="bg-green-500 hover:bg-green-600 text-white p-3"
+            className="bg-green-500 hover:bg-green-600 text-white p-3 min-h-touch touch-manipulation"
             disabled={!input.trim()}
           >
             <Send className="w-5 h-5" />

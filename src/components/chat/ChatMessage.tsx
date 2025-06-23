@@ -26,7 +26,7 @@ export const ChatMessage = ({ message, onOptionClick }: ChatMessageProps) => {
       
       <div
         className={cn(
-          "max-w-[80%] rounded-2xl px-4 py-3",
+          "max-w-[80%] message-bubble",
           isBot
             ? "bg-gray-100 text-gray-900"
             : "bg-primary-500 text-white"
@@ -41,7 +41,7 @@ export const ChatMessage = ({ message, onOptionClick }: ChatMessageProps) => {
                 key={index}
                 variant="outline"
                 size="sm"
-                className="w-full justify-start text-left"
+                className="w-full justify-start text-left min-h-touch touch-manipulation"
                 onClick={() => onOptionClick?.(option)}
               >
                 {option}

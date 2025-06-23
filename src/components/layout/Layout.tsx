@@ -5,9 +5,9 @@ import Footer from './Footer';
 
 const Layout = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-primary-50/20">
+    <div className="h-dvh flex flex-col bg-gradient-to-br from-neutral-50 to-primary-50/20">
       <Navigation />
-      <main className="pt-20">
+      <main className="flex-1 overflow-y-auto pt-20">
         <Outlet />
       </main>
       <Footer />

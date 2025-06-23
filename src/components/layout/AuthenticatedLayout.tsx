@@ -134,7 +134,7 @@ const AuthenticatedLayout: React.FC = () => {
 
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="flex h-screen w-full">
+      <div className="flex h-dvh w-full">
         {/* Sidebar */}
         <Sidebar className="border-r">
           <SidebarHeader className="border-b px-4 py-3">

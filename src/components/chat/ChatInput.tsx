@@ -27,9 +27,9 @@ export const ChatInput = ({ onSend, placeholder = "Type your message...", disabl
         onChange={(e) => setMessage(e.target.value)}
         placeholder={placeholder}
         disabled={disabled}
-        className="flex-1"
+        className="flex-1 h-touch rounded-mobile touch-manipulation"
       />
-      <Button type="submit" size="icon" disabled={disabled || !message.trim()}>
+      <Button type="submit" size="icon" disabled={disabled || !message.trim()} className="min-h-touch touch-manipulation">
         <Send className="w-4 h-4" />
       </Button>
     </form>

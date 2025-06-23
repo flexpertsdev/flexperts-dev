@@ -205,12 +205,12 @@ const SpaceChat: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" className="min-h-touch touch-manipulation">
             <Users className="h-4 w-4" />
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="min-h-touch touch-manipulation">
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -242,7 +242,7 @@ const SpaceChat: React.FC = () => {
               message.timestamp.getTime() - messages[index - 1].timestamp.getTime() > 300000; // 5 minutes
 
             return (
-              <div key={message.id} className="group flex gap-3 hover:bg-muted/30 -mx-2 px-2 py-1 rounded">
+              <div key={message.id} className="group flex gap-3 hover:bg-muted/30 -mx-2 px-2 py-1 rounded animate-fade-in">
                 {showAvatar ? (
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={message.sender.avatar} />
@@ -264,14 +264,14 @@ const SpaceChat: React.FC = () => {
                       </span>
                     </div>
                   )}
-                  <p className="text-sm">{message.content}</p>
+                  <p className="text-sm message-bubble bg-gray-100 px-3 py-2 rounded-mobile inline-block">{message.content}</p>
                   {message.reactions && message.reactions.length > 0 && (
                     <div className="flex gap-1 mt-1">
                       {message.reactions.map((reaction, idx) => (
                         <Badge
                           key={idx}
                           variant="secondary"
-                          className="cursor-pointer hover:bg-secondary/80 px-1.5 py-0.5 text-xs"
+                          className="cursor-pointer hover:bg-secondary/80 px-1.5 py-0.5 text-xs touch-manipulation"
                         >
                           <span className="mr-1">{reaction.emoji}</span>
                           <span>{reaction.users.length}</span>
@@ -305,7 +305,7 @@ const SpaceChat: React.FC = () => {
       {/* Input Area */}
       <div className="border-t p-4">
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button variant="ghost" size="icon" className="h-8 w-8 min-h-touch touch-manipulation">
             <Paperclip className="h-4 w-4" />
           </Button>
           <Input
@@ -313,18 +313,18 @@ const SpaceChat: React.FC = () => {
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder={`Message #${spaceInfo.name}`}
-            className="flex-1"
+            className="flex-1 h-touch rounded-mobile touch-manipulation"
           />
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button variant="ghost" size="icon" className="h-8 w-8 min-h-touch touch-manipulation">
             <Smile className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button variant="ghost" size="icon" className="h-8 w-8 min-h-touch touch-manipulation">
             <Mic className="h-4 w-4" />
           </Button>
           <Button
             onClick={handleSendMessage}
             size="icon"
-            className="h-8 w-8"
+            className="h-8 w-8 min-h-touch touch-manipulation"
             disabled={!inputValue.trim()}
           >
             <Send className="h-4 w-4" />
