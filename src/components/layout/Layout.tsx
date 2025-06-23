@@ -10,7 +10,7 @@ const Layout = () => {
       <main className="flex-1 overflow-y-auto pt-20">
         <Outlet />
       </main>
-      <Footer />
+      
     </div>
   );
 };

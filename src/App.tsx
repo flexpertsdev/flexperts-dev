@@ -3,12 +3,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import AuthenticatedLayout from "./components/layout/AuthenticatedLayout";
 import { AuthenticatedAppLayout } from "./layouts/AuthenticatedAppLayout";
 import { CleanAuthenticatedLayout } from "./layouts/CleanAuthenticatedLayout";
 import { SplitViewLayout } from "./layouts/SplitViewLayout";
+import { ResponsiveAuthLayout } from "./layouts/ResponsiveAuthLayout";
 import ScrollToTop from "./components/ScrollToTop";
 import Home from "./pages/Home";
 import YouBuild from "./pages/YouBuild";
@@ -26,6 +27,12 @@ import BuildTogetherApp from "./pages/app/BuildTogetherApp";
 import { YouBuildDashboard } from "./pages/app/YouBuildDashboard";
 import { AskFlexiChat } from "./components/app/AskFlexiChat";
 import { SpaceView } from "./pages/app/SpaceView";
+import { HomePage } from "./pages/app/HomePage";
+import { SpacesPage } from "./pages/app/SpacesPage";
+import { LearnPage } from "./pages/app/LearnPage";
+import { ProfilePage } from "./pages/app/ProfilePage";
+import { SettingsPage } from "./pages/app/SettingsPage";
+import { ChatSpacePage } from "./pages/app/ChatSpacePage";
 
 const queryClient = new QueryClient();
 
@@ -53,7 +60,7 @@ const App = () => (
           <Route path="/onboarding" element={<Onboarding />} />
           
           {/* Authenticated routes - Clean WhatsApp-inspired Layout */}
-          <Route path="/app" element={<CleanAuthenticatedLayout />}>
+          {/* <Route path="/app" element={<CleanAuthenticatedLayout />}>
             <Route path="you-build" element={<YouBuildDashboard />} />
             <Route path="you-build/ask-flexi" element={<AskFlexiChat />} />
             <Route path="you-build/space/:spaceId" element={<SpaceView />} />
@@ -62,11 +69,22 @@ const App = () => (
             <Route path="build-together" element={<BuildTogetherApp />} />
             <Route path="build-together/space/:spaceId" element={<SpaceView />} />
             <Route index element={<YouBuildDashboard />} />
-          </Route>
+          </Route> */}
           
           {/* Split View Routes - AI Chat in sidebar */}
           <Route path="/app/visual" element={<SplitViewLayout />}>
             <Route path="flow-designer" element={<div className="flex-1 grid-bg flex items-center justify-center text-gray-400">Visual Flow Designer Content</div>} />
+          </Route>
+          
+          {/* New Responsive Authenticated Routes */}
+          <Route path="/app" element={<ResponsiveAuthLayout />}>
+            <Route index element={<Navigate to="/app/home" />} />
+            <Route path="home" element={<HomePage />} />
+            <Route path="spaces" element={<SpacesPage />} />
+            <Route path="spaces/:spaceId" element={<ChatSpacePage />} />
+            <Route path="learn" element={<LearnPage />} />
+            <Route path="profile" element={<ProfilePage />} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

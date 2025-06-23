@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Flexperts Mobile - Chat Space</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+        }
+        .safe-top {
+            padding-top: env(safe-area-inset-top);
+        }
+        .safe-bottom {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .chat-bubble {
+            max-width: 85%;
+        }
+        .chat-bubble.sent {
+            background: #22C55E;
+            color: white;
+            border-radius: 18px 18px 4px 18px;
+        }
+        .chat-bubble.received {
+            background: #F3F4F6;
+            color: #111827;
+            border-radius: 18px 18px 18px 4px;
+        }
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #9CA3AF;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typing 1.4s infinite;
+        }
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 h-screen flex flex-col">
+    <!-- Chat Header -->
+    <header class="bg-white border-b border-gray-200 safe-top">
+        <div class="flex items-center justify-between p-4">
+            <div class="flex items-center space-x-3">
+                <button class="p-1 -ml-1">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="font-semibold text-gray-900">Authentication System</h1>
+                        <p class="text-xs text-green-600 flex items-center">
+                            <span class="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
+                            Flexi is online
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <button class="p-2 hover:bg-gray-100 rounded-lg">
+                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Chat Messages -->
+    <main class="flex-1 overflow-y-auto hide-scrollbar p-4 space-y-4">
+        <!-- Date Divider -->
+        <div class="flex items-center justify-center">
+            <span class="bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-full">Today</span>
+        </div>
+
+        <!-- User Message -->
+        <div class="flex justify-end">
+            <div class="chat-bubble sent px-4 py-2 shadow-sm">
+                <p>I need to implement a login system with email/password and social auth</p>
+                <span class="text-xs text-green-100 mt-1 block">3:46 PM</span>
+            </div>
+        </div>
+
+        <!-- AI Message -->
+        <div class="flex items-end space-x-2">
+            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+            <div class="chat-bubble received px-4 py-2 shadow-sm">
+                <p>I'll help you create a comprehensive authentication system. Let's start by understanding your requirements:</p>
+                <ul class="mt-2 space-y-1">
+                    <li class="flex items-start">
+                        <span class="text-green-600 mr-2">✓</span>
+                        <span>Email/Password Auth</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-600 mr-2">✓</span>
+                        <span>Social Auth (Google, GitHub?)</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-gray-400 mr-2">?</span>
+                        <span>Additional Features?</span>
+                    </li>
+                </ul>
+                <span class="text-xs text-gray-500 mt-2 block">3:46 PM</span>
+            </div>
+        </div>
+
+        <!-- User Message -->
+        <div class="flex justify-end">
+            <div class="chat-bubble sent px-4 py-2 shadow-sm">
+                <p>Google and GitHub for social auth. Also need 2FA and password reset.</p>
+                <span class="text-xs text-green-100 mt-1 block">3:48 PM</span>
+            </div>
+        </div>
+
+        <!-- Code Attachment -->
+        <div class="flex items-end space-x-2">
+            <div class="w-8 h-8"></div>
+            <div class="chat-bubble received px-4 py-2 shadow-sm">
+                <p class="mb-3">Perfect! I've generated a complete authentication system for you:</p>
+                
+                <!-- Code Files -->
+                <div class="space-y-2">
+                    <div class="bg-gray-100 rounded-lg p-3 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-gray-200 rounded flex items-center justify-center">
+                                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="font-medium text-gray-900">AuthContext.tsx</div>
+                                <div class="text-xs text-gray-500">React Context for auth state</div>
+                            </div>
+                        </div>
+                        <button class="text-green-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="bg-gray-100 rounded-lg p-3 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-gray-200 rounded flex items-center justify-center">
+                                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="font-medium text-gray-900">LoginForm.tsx</div>
+                                <div class="text-xs text-gray-500">Login component with social</div>
+                            </div>
+                        </div>
+                        <button class="text-green-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <span class="text-xs text-gray-500 mt-3 block">3:49 PM</span>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="flex items-end space-x-2">
+            <div class="w-8 h-8"></div>
+            <div class="flex flex-wrap gap-2">
+                <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm px-3 py-1.5 rounded-full transition-colors">
+                    View Full Code
+                </button>
+                <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm px-3 py-1.5 rounded-full transition-colors">
+                    Deploy to GitHub
+                </button>
+                <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm px-3 py-1.5 rounded-full transition-colors">
+                    Test Implementation
+                </button>
+            </div>
+        </div>
+
+        <!-- Typing Indicator -->
+        <div class="flex items-end space-x-2">
+            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+            <div class="chat-bubble received px-4 py-3">
+                <div class="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Input Area -->
+    <div class="bg-white border-t border-gray-200 p-4 safe-bottom">
+        <div class="flex items-end space-x-2">
+            <button class="p-2 text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                </svg>
+            </button>
+            <div class="flex-1">
+                <input type="text" placeholder="Type a message..." class="w-full px-4 py-3 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500">
+            </div>
+            <button class="p-2 text-green-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                </svg>
+            </button>
+        </div>
+        <!-- Quick Suggestions -->
+        <div class="flex gap-2 mt-2 overflow-x-auto hide-scrollbar">
+            <button class="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full whitespace-nowrap">
+                Add error handling
+            </button>
+            <button class="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full whitespace-nowrap">
+                Explain the code
+            </button>
+            <button class="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full whitespace-nowrap">
+                Add tests
+            </button>
+        </div>
+    </div>
+</body>
+</html>
