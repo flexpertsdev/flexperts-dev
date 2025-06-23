@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import AuthenticatedLayout from "./components/layout/AuthenticatedLayout";
 import { AuthenticatedAppLayout } from "./layouts/AuthenticatedAppLayout";
+import { CleanAuthenticatedLayout } from "./layouts/CleanAuthenticatedLayout";
+import { SplitViewLayout } from "./layouts/SplitViewLayout";
 import ScrollToTop from "./components/ScrollToTop";
 import Home from "./pages/Home";
 import YouBuild from "./pages/YouBuild";
@@ -23,6 +25,7 @@ import WeBuildApp from "./pages/app/WeBuildApp";
 import BuildTogetherApp from "./pages/app/BuildTogetherApp";
 import { YouBuildDashboard } from "./pages/app/YouBuildDashboard";
 import { AskFlexiChat } from "./components/app/AskFlexiChat";
+import { SpaceView } from "./pages/app/SpaceView";
 
 const queryClient = new QueryClient();
 
@@ -49,13 +52,21 @@ const App = () => (
           <Route path="/signup" element={<Signup />} />
           <Route path="/onboarding" element={<Onboarding />} />
           
-          {/* Authenticated routes - New Enhanced Layout */}
-          <Route path="/app" element={<AuthenticatedAppLayout />}>
+          {/* Authenticated routes - Clean WhatsApp-inspired Layout */}
+          <Route path="/app" element={<CleanAuthenticatedLayout />}>
             <Route path="you-build" element={<YouBuildDashboard />} />
             <Route path="you-build/ask-flexi" element={<AskFlexiChat />} />
+            <Route path="you-build/space/:spaceId" element={<SpaceView />} />
             <Route path="we-build" element={<WeBuildApp />} />
+            <Route path="we-build/space/:spaceId" element={<SpaceView />} />
             <Route path="build-together" element={<BuildTogetherApp />} />
+            <Route path="build-together/space/:spaceId" element={<SpaceView />} />
             <Route index element={<YouBuildDashboard />} />
+          </Route>
+          
+          {/* Split View Routes - AI Chat in sidebar */}
+          <Route path="/app/visual" element={<SplitViewLayout />}>
+            <Route path="flow-designer" element={<div className="flex-1 grid-bg flex items-center justify-center text-gray-400">Visual Flow Designer Content</div>} />
           </Route>
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
