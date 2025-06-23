@@ -1,603 +1,517 @@
-
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 import { 
-  DollarSign, 
-  TrendingUp, 
-  Users, 
-  Sparkles, 
-  Instagram, 
-  Youtube,
+  ChevronRight, 
+  DollarSign,
+  TrendingUp,
+  Users,
+  Zap,
   MessageSquare,
   BarChart3,
-  Play,
-  Pause,
-  ChevronRight,
-  CheckCircle,
-  Zap,
-  Award,
-  ShoppingBag,
+  Sparkles,
   Target,
+  Rocket,
+  CheckCircle,
   Heart
 } from "lucide-react";
 
 const BuildTogether = () => {
-  const [activeDemo, setActiveDemo] = useState<'earnings' | 'products' | 'analytics'>('earnings');
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [demoStep, setDemoStep] = useState(0);
-
-  // Auto-cycle through demo steps
-  useEffect(() => {
-    if (!isPlaying) return;
-    
-    const interval = setInterval(() => {
-      setDemoStep((prev) => (prev + 1) % 4);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [isPlaying, activeDemo]);
-
-  // Interactive Demo Component
-  const InteractiveDemo = () => {
-    if (activeDemo === 'earnings') {
-      return (
-        <div className="relative h-full bg-gray-900 rounded-lg overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-900/20 to-yellow-900/20"></div>
-          
-          {/* Earnings Dashboard */}
-          <div className="relative p-6 h-full">
-            <h4 className="text-white font-semibold mb-4">Your Earnings Dashboard</h4>
-            
-            {/* Earnings Stats */}
-            <div className="mb-6">
-              <div className={`bg-gradient-to-r from-green-600 to-green-700 rounded-lg p-4 text-white transition-all duration-700 ${demoStep >= 0 ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-                <div className="flex items-center justify-between mb-2">
-                  <div>
-                    <p className="text-sm opacity-90">Total Earnings</p>
-                    <p className="text-3xl font-bold">$12,450</p>
-                  </div>
-                  <TrendingUp className="w-8 h-8 opacity-50" />
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="text-green-300">+23%</span>
-                  <span className="opacity-70">vs last month</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Monthly Breakdown */}
-            <div className="grid grid-cols-2 gap-3 mb-6">
-              <div className={`bg-gray-800 rounded-lg p-3 transition-all duration-700 delay-300 ${demoStep >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                <p className="text-gray-400 text-xs mb-1">This Month</p>
-                <p className="text-white text-xl font-bold">$2,890</p>
-                <div className="flex items-center gap-1 mt-1">
-                  <div className="w-full bg-gray-700 rounded-full h-1.5">
-                    <div className="bg-green-500 h-1.5 rounded-full" style={{ width: '75%' }}></div>
-                  </div>
-                  <span className="text-xs text-gray-400">75%</span>
-                </div>
-              </div>
-              
-              <div className={`bg-gray-800 rounded-lg p-3 transition-all duration-700 delay-600 ${demoStep >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                <p className="text-gray-400 text-xs mb-1">Active Subscribers</p>
-                <p className="text-white text-xl font-bold">156</p>
-                <div className="flex items-center gap-1 mt-1 text-xs text-green-400">
-                  <span>+12 this week</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Top Products */}
-            <div className={`transition-all duration-700 ${demoStep >= 3 ? 'opacity-100' : 'opacity-0'}`}>
-              <p className="text-gray-400 text-sm mb-3">Top Performing Products</p>
-              <div className="space-y-2">
-                <div className="bg-white rounded-lg p-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-purple-500 rounded flex items-center justify-center">
-                        <Sparkles className="w-4 h-4 text-white" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">AI Content Generator</p>
-                        <p className="text-xs text-gray-500">89 subscribers</p>
-                      </div>
-                    </div>
-                    <span className="text-green-600 font-medium">$890/mo</span>
-                  </div>
-                </div>
-                
-                <div className="bg-white rounded-lg p-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center">
-                        <BarChart3 className="w-4 h-4 text-white" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">Analytics Dashboard</p>
-                        <p className="text-xs text-gray-500">67 subscribers</p>
-                      </div>
-                    </div>
-                    <span className="text-green-600 font-medium">$670/mo</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    } else if (activeDemo === 'products') {
-      return (
-        <div className="relative h-full bg-gray-900 rounded-lg overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-pink-900/20"></div>
-          
-          {/* Product Showcase */}
-          <div className="relative p-6 h-full">
-            <h4 className="text-white font-semibold mb-4">Your Product Catalog</h4>
-            
-            {/* Featured Product */}
-            <div className={`bg-white rounded-lg p-4 mb-4 transition-all duration-700 ${demoStep >= 0 ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
-              <div className="flex items-start gap-3 mb-3">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                  <Sparkles className="w-8 h-8 text-white" />
-                </div>
-                <div className="flex-1">
-                  <h5 className="font-semibold">AI Content Assistant Pro</h5>
-                  <p className="text-sm text-gray-600 mb-2">Perfect for content creators who need help with captions, posts, and engagement</p>
-                  <div className="flex items-center gap-4">
-                    <span className="text-2xl font-bold text-green-600">$19.99<span className="text-sm text-gray-500">/mo</span></span>
-                    <span className="text-sm bg-green-100 text-green-700 px-2 py-1 rounded">You earn: $10/mo</span>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Product Features */}
-              <div className={`grid grid-cols-2 gap-2 mt-3 transition-all duration-700 delay-300 ${demoStep >= 1 ? 'opacity-100' : 'opacity-0'}`}>
-                <div className="text-xs bg-gray-50 rounded p-2">
-                  <CheckCircle className="w-3 h-3 text-green-500 inline mr-1" />
-                  AI Caption Writer
-                </div>
-                <div className="text-xs bg-gray-50 rounded p-2">
-                  <CheckCircle className="w-3 h-3 text-green-500 inline mr-1" />
-                  Hashtag Generator
-                </div>
-                <div className="text-xs bg-gray-50 rounded p-2">
-                  <CheckCircle className="w-3 h-3 text-green-500 inline mr-1" />
-                  Content Calendar
-                </div>
-                <div className="text-xs bg-gray-50 rounded p-2">
-                  <CheckCircle className="w-3 h-3 text-green-500 inline mr-1" />
-                  Analytics Insights
-                </div>
-              </div>
-            </div>
-
-            {/* Marketing Assets */}
-            <div className={`transition-all duration-700 ${demoStep >= 2 ? 'opacity-100' : 'opacity-0'}`}>
-              <p className="text-gray-400 text-sm mb-2">Marketing Assets</p>
-              <div className="grid grid-cols-3 gap-2">
-                <div className="bg-gray-800 rounded-lg p-3 text-center">
-                  <Instagram className="w-6 h-6 text-pink-400 mx-auto mb-1" />
-                  <p className="text-xs text-gray-300">IG Stories</p>
-                </div>
-                <div className="bg-gray-800 rounded-lg p-3 text-center">
-                  <Youtube className="w-6 h-6 text-red-400 mx-auto mb-1" />
-                  <p className="text-xs text-gray-300">Video Ads</p>
-                </div>
-                <div className="bg-gray-800 rounded-lg p-3 text-center">
-                  <MessageSquare className="w-6 h-6 text-blue-400 mx-auto mb-1" />
-                  <p className="text-xs text-gray-300">Email Copy</p>
-                </div>
-              </div>
-            </div>
-
-            {/* AI Content Suggestion */}
-            <div className={`absolute bottom-6 left-6 right-6 bg-gray-800 rounded-lg p-3 transition-all duration-700 ${demoStep >= 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <div className="flex items-start gap-2">
-                <Sparkles className="w-4 h-4 text-green-400 mt-0.5" />
-                <div className="flex-1">
-                  <p className="text-white text-sm font-medium">Promotion Idea:</p>
-                  <p className="text-gray-300 text-xs">"Limited time: First 50 subscribers get 30% off for life!"</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    } else {
-      return (
-        <div className="relative h-full bg-gray-900 rounded-lg overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-green-900/20"></div>
-          
-          {/* Analytics Dashboard */}
-          <div className="relative p-6 h-full">
-            <h4 className="text-white font-semibold mb-4">Campaign Analytics</h4>
-            
-            {/* Performance Overview */}
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              <div className={`bg-gray-800 rounded-lg p-3 transition-all duration-700 ${demoStep >= 0 ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
-                <div className="flex items-center gap-2 mb-2">
-                  <Target className="w-4 h-4 text-blue-400" />
-                  <p className="text-gray-400 text-xs">Reach</p>
-                </div>
-                <p className="text-white text-xl font-bold">45.2K</p>
-                <p className="text-xs text-green-400">+15% this week</p>
-              </div>
-              
-              <div className={`bg-gray-800 rounded-lg p-3 transition-all duration-700 delay-300 ${demoStep >= 1 ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
-                <div className="flex items-center gap-2 mb-2">
-                  <Heart className="w-4 h-4 text-red-400" />
-                  <p className="text-gray-400 text-xs">Engagement</p>
-                </div>
-                <p className="text-white text-xl font-bold">8.7%</p>
-                <p className="text-xs text-green-400">Above average</p>
-              </div>
-            </div>
-
-            {/* Conversion Funnel */}
-            <div className={`mb-4 transition-all duration-700 ${demoStep >= 2 ? 'opacity-100' : 'opacity-0'}`}>
-              <p className="text-gray-400 text-sm mb-2">Conversion Funnel</p>
-              <div className="space-y-2">
-                <div>
-                  <div className="flex justify-between text-xs mb-1">
-                    <span className="text-gray-300">Views</span>
-                    <span className="text-gray-400">45,200</span>
-                  </div>
-                  <div className="bg-gray-700 rounded-full h-2">
-                    <div className="bg-blue-500 h-2 rounded-full" style={{ width: '100%' }}></div>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex justify-between text-xs mb-1">
-                    <span className="text-gray-300">Clicks</span>
-                    <span className="text-gray-400">3,816</span>
-                  </div>
-                  <div className="bg-gray-700 rounded-full h-2">
-                    <div className="bg-purple-500 h-2 rounded-full" style={{ width: '75%' }}></div>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex justify-between text-xs mb-1">
-                    <span className="text-gray-300">Sign-ups</span>
-                    <span className="text-gray-400">342</span>
-                  </div>
-                  <div className="bg-gray-700 rounded-full h-2">
-                    <div className="bg-pink-500 h-2 rounded-full" style={{ width: '40%' }}></div>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex justify-between text-xs mb-1">
-                    <span className="text-gray-300">Conversions</span>
-                    <span className="text-gray-400">156</span>
-                  </div>
-                  <div className="bg-gray-700 rounded-full h-2">
-                    <div className="bg-green-500 h-2 rounded-full" style={{ width: '20%' }}></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Best Performing Content */}
-            <div className={`bg-white rounded-lg p-3 transition-all duration-700 ${demoStep >= 3 ? 'opacity-100' : 'opacity-0'}`}>
-              <p className="text-xs text-gray-500 mb-2">Best Performing Post</p>
-              <div className="flex items-start gap-2">
-                <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-500 rounded"></div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">"5 AI Tools That Changed My Life"</p>
-                  <div className="flex items-center gap-3 text-xs text-gray-500 mt-1">
-                    <span>12.3K views</span>
-                    <span>•</span>
-                    <span>892 clicks</span>
-                    <span>•</span>
-                    <span className="text-green-600 font-medium">23 sales</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-  };
-
   return (
     <div className="min-h-screen">
-      {/* Hero Section with Interactive Demo */}
-      <section className="py-12 px-4">
+      {/* Hero Section */}
+      <section className="py-20 px-4 bg-gradient-to-br from-primary-50/50 to-white">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
-            <div>
-              <h1 className="text-5xl md:text-6xl font-bold text-neutral-900 mb-6 leading-tight">
-                Turn Influence
-                <span className="text-gradient block">Into Income</span>
-              </h1>
-              <p className="text-xl md:text-2xl text-neutral-600 mb-8 leading-relaxed">
-                Partner with us to create custom AI products for your audience. Earn 50% revenue share on every sale.
-              </p>
-              
-              {/* Demo Selector */}
-              <div className="flex flex-wrap gap-2 mb-6">
-                <button
-                  onClick={() => setActiveDemo('earnings')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                    activeDemo === 'earnings' 
-                      ? 'bg-primary-500 text-white' 
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  <DollarSign className="w-4 h-4 inline mr-2" />
-                  Earnings Dashboard
-                </button>
-                <button
-                  onClick={() => setActiveDemo('products')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                    activeDemo === 'products' 
-                      ? 'bg-primary-500 text-white' 
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  <ShoppingBag className="w-4 h-4 inline mr-2" />
-                  Your Products
-                </button>
-                <button
-                  onClick={() => setActiveDemo('analytics')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                    activeDemo === 'analytics' 
-                      ? 'bg-primary-500 text-white' 
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  <BarChart3 className="w-4 h-4 inline mr-2" />
-                  Analytics
-                </button>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-4 items-start">
-                <Button 
-                  asChild
-                  size="lg" 
-                  className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 text-lg"
-                >
-                  <Link to="#apply">
-                    Apply Now
-                    <ChevronRight className="w-5 h-5 ml-2" />
-                  </Link>
-                </Button>
-                <button
-                  onClick={() => setIsPlaying(!isPlaying)}
-                  className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
-                >
-                  {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-                  <span>{isPlaying ? 'Pause' : 'Play'} Demo</span>
-                </button>
-              </div>
-              
-              {/* Quick Stats */}
-              <div className="grid grid-cols-3 gap-4 mt-8">
-                <div>
-                  <p className="text-3xl font-bold text-primary-600">50%</p>
-                  <p className="text-sm text-gray-600">Revenue Share</p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold text-primary-600">$50K+</p>
-                  <p className="text-sm text-gray-600">Avg Annual Earnings</p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold text-primary-600">24/7</p>
-                  <p className="text-sm text-gray-600">Support</p>
-                </div>
-              </div>
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center bg-primary-100 text-primary-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
+              <Sparkles className="w-4 h-4 mr-2" />
+              Influencer Partnership Program
+            </div>
+            
+            <h1 className="text-5xl md:text-6xl font-bold text-neutral-900 mb-6 leading-tight">
+              Turn Your Followers Into
+              <span className="text-gradient block">Recurring Revenue</span>
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-neutral-600 mb-8 max-w-3xl mx-auto">
+              Earn 50% commission on every subscription your followers sign up for - forever. 
+              No caps, no limits, no fine print.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+              <Button asChild size="lg" className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-4 text-lg">
+                <Link to="/signup">
+                  Apply Now
+                  <ChevronRight className="w-5 h-5 ml-2" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="border-neutral-300 px-8 py-4 text-lg">
+                <Link to="#how-it-works">
+                  See How It Works
+                </Link>
+              </Button>
             </div>
 
-            {/* Right - Interactive Demo */}
-            <div className="h-[500px] lg:h-[600px]">
-              <InteractiveDemo />
+            {/* Key Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+              <div className="bg-white rounded-xl shadow-md p-6">
+                <div className="text-3xl font-bold text-primary-600 mb-2">50%</div>
+                <div className="text-neutral-600">Lifetime Commission</div>
+              </div>
+              <div className="bg-white rounded-xl shadow-md p-6">
+                <div className="text-3xl font-bold text-primary-600 mb-2">$2-5K</div>
+                <div className="text-neutral-600">Avg Monthly Earnings</div>
+              </div>
+              <div className="bg-white rounded-xl shadow-md p-6">
+                <div className="text-3xl font-bold text-primary-600 mb-2">Forever</div>
+                <div className="text-neutral-600">Earning Duration</div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="py-24 px-4 bg-gradient-to-br from-primary-50/20 to-neutral-50">
+      <section id="how-it-works" className="py-24 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-4">
               How It Works
             </h2>
             <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-              Like Tupperware parties, but for AI. Build your own product empire.
+              Simple steps to start earning from your influence
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* Step 1 */}
-            <div className="relative">
-              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6">
-                  <MessageSquare className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-2xl font-semibold text-neutral-900 mb-4">1. Share Your Vision</h3>
-                <p className="text-neutral-600 mb-6">Tell us about your audience and what AI product would help them most</p>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-center">
-                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    <span>Audience demographics</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    <span>Product ideas</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    <span>Revenue goals</span>
-                  </li>
-                </ul>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-primary-600">1</span>
               </div>
+              <h3 className="text-lg font-semibold mb-2">Browse Apps</h3>
+              <p className="text-gray-600">Explore our marketplace of SaaS products ready for promotion</p>
             </div>
 
-            {/* Step 2 */}
-            <div className="relative">
-              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mb-6">
-                  <Zap className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-2xl font-semibold text-neutral-900 mb-4">2. We Build & Brand</h3>
-                <p className="text-neutral-600 mb-6">Our team creates custom AI products matched to your brand</p>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-center">
-                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    <span>Custom branding</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    <span>Marketing materials</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    <span>Launch support</span>
-                  </li>
-                </ul>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-primary-600">2</span>
               </div>
+              <h3 className="text-lg font-semibold mb-2">Apply to Promote</h3>
+              <p className="text-gray-600">Choose products that align with your audience</p>
             </div>
 
-            {/* Step 3 */}
-            <div className="relative">
-              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
-                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-6">
-                  <DollarSign className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-2xl font-semibold text-neutral-900 mb-4">3. Promote & Earn</h3>
-                <p className="text-neutral-600 mb-6">Share with your audience and earn 50% on every subscription</p>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-center">
-                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    <span>50% revenue share</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    <span>Monthly payouts</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    <span>Real-time analytics</span>
-                  </li>
-                </ul>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-primary-600">3</span>
               </div>
+              <h3 className="text-lg font-semibold mb-2">Create Content</h3>
+              <p className="text-gray-600">Use our AI tools and assets to create engaging content</p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-primary-600">4</span>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Earn Forever</h3>
+              <p className="text-gray-600">Get 50% of every subscription payment, forever</p>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* AI Integration Highlight */}
-          <div className="mt-16 max-w-4xl mx-auto">
-            <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl p-8">
-              <div className="flex items-start gap-6">
-                <div className="w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center flex-shrink-0">
-                  <Sparkles className="w-8 h-8 text-green-500" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-2xl font-semibold mb-3">AI-Powered Marketing Support</h3>
-                  <p className="text-gray-600 mb-4">
-                    Ask Flexi helps you create compelling content for your audience. Generate social media posts, 
-                    email campaigns, and promotional materials - all optimized for your specific audience.
-                  </p>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="bg-white rounded-lg p-4">
-                      <Instagram className="w-6 h-6 text-pink-500 mb-2" />
-                      <h4 className="font-medium mb-1">Social Content</h4>
-                      <p className="text-sm text-gray-600">AI-generated posts & stories</p>
-                    </div>
-                    <div className="bg-white rounded-lg p-4">
-                      <MessageSquare className="w-6 h-6 text-blue-500 mb-2" />
-                      <h4 className="font-medium mb-1">Email Campaigns</h4>
-                      <p className="text-sm text-gray-600">Automated sequences</p>
-                    </div>
-                    <div className="bg-white rounded-lg p-4">
-                      <BarChart3 className="w-6 h-6 text-green-500 mb-2" />
-                      <h4 className="font-medium mb-1">Performance Tips</h4>
-                      <p className="text-sm text-gray-600">Data-driven insights</p>
-                    </div>
-                  </div>
-                </div>
+      {/* Why Different */}
+      <section className="py-24 px-4 bg-gray-50">
+        <div className="container mx-auto">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-4">
+                Why We're Different
+              </h2>
+              <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
+                Traditional affiliate programs pay pennies. We share real revenue.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              <div>
+                <h3 className="text-2xl font-bold mb-6">Traditional Affiliate Programs</h3>
+                <ul className="space-y-4">
+                  <li className="flex items-start">
+                    <span className="text-red-500 mr-3">✗</span>
+                    <span>5-10% commissions (if you're lucky)</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-red-500 mr-3">✗</span>
+                    <span>One-time payments only</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-red-500 mr-3">✗</span>
+                    <span>Cookie windows that expire</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-red-500 mr-3">✗</span>
+                    <span>Promoting products you don't believe in</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-red-500 mr-3">✗</span>
+                    <span>No say in product development</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-bold mb-6">Flexperts Build Together</h3>
+                <ul className="space-y-4">
+                  <li className="flex items-start">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
+                    <span><strong>50% lifetime commission</strong> on all payments</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
+                    <span><strong>Recurring revenue</strong> for life of customer</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
+                    <span><strong>Your link works forever</strong> - no expiration</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
+                    <span><strong>Choose products you love</strong> to promote</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
+                    <span><strong>Direct input</strong> on product roadmap</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Application Form */}
+      {/* Tools & Support */}
       <section className="py-24 px-4">
-        <div className="container mx-auto max-w-2xl">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-neutral-900 mb-4">
-              Apply to Join
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-4">
+              Everything You Need to Succeed
             </h2>
-            <p className="text-xl text-neutral-600">
-              Start your journey as a Flexfluencer
+            <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
+              We provide all the tools and support to maximize your earnings
             </p>
           </div>
 
-          <Card className="glass-card border-0">
-            <CardHeader>
-              <CardTitle className="text-2xl text-center">Flexfluencer Application</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">
-                    First Name
-                  </label>
-                  <Input placeholder="Your first name" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <Card>
+              <CardContent className="p-6">
+                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+                  <MessageSquare className="w-6 h-6 text-primary-600" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3">AI Content Generation</h3>
+                <p className="text-gray-600 mb-4">
+                  Generate posts, scripts, and content ideas tailored to your audience
+                </p>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li>• Social media posts</li>
+                  <li>• Video scripts</li>
+                  <li>• Email templates</li>
+                  <li>• Blog articles</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+                  <Zap className="w-6 h-6 text-primary-600" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Marketing Assets</h3>
+                <p className="text-gray-600 mb-4">
+                  Professional materials ready to use across all platforms
+                </p>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li>• Product demos</li>
+                  <li>• Graphics & banners</li>
+                  <li>• Landing pages</li>
+                  <li>• Tracking links</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+                  <BarChart3 className="w-6 h-6 text-primary-600" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Real-Time Analytics</h3>
+                <p className="text-gray-600 mb-4">
+                  Track your performance and optimize your campaigns
+                </p>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li>• Conversion tracking</li>
+                  <li>• Revenue reports</li>
+                  <li>• Audience insights</li>
+                  <li>• A/B testing tools</li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Success Stories */}
+      <section className="py-24 px-4 bg-gray-50">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-4">
+              Success Stories
+            </h2>
+            <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
+              Real influencers earning real revenue
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div className="bg-white rounded-xl p-6 shadow-lg">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                  TM
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">
-                    Last Name
-                  </label>
-                  <Input placeholder="Your last name" />
+                  <h4 className="font-semibold">Tech with Maria</h4>
+                  <p className="text-sm text-gray-600">YouTube - 125K subs</p>
                 </div>
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Email Address
-                </label>
-                <Input type="email" placeholder="your@email.com" />
+              <p className="text-gray-700 mb-4">
+                "I've been promoting SaaS tools for years. With Flexperts, I finally earn what I'm worth. 
+                $4,200 last month alone!"
+              </p>
+              <div className="flex items-center text-green-600 font-semibold">
+                <TrendingUp className="w-4 h-4 mr-1" />
+                $4,200/month
               </div>
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Social Media Profiles
-                </label>
-                <Textarea placeholder="Share your social media profiles and follower counts" />
+            <div className="bg-white rounded-xl p-6 shadow-lg">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                  JR
+                </div>
+                <div>
+                  <h4 className="font-semibold">Jake Reviews</h4>
+                  <p className="text-sm text-gray-600">TikTok - 50K followers</p>
+                </div>
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Audience Demographics
-                </label>
-                <Textarea placeholder="Describe your audience (age, interests, profession, etc.)" />
+              <p className="text-gray-700 mb-4">
+                "The 50% commission is game-changing. One viral video brought me recurring income 
+                that keeps growing every month."
+              </p>
+              <div className="flex items-center text-green-600 font-semibold">
+                <TrendingUp className="w-4 h-4 mr-1" />
+                $2,850/month
               </div>
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Product Ideas
-                </label>
-                <Textarea placeholder="What kind of AI product would you like to create for your audience?" />
+            <div className="bg-white rounded-xl p-6 shadow-lg">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                  SD
+                </div>
+                <div>
+                  <h4 className="font-semibold">StartupDev</h4>
+                  <p className="text-sm text-gray-600">Newsletter - 30K subs</p>
+                </div>
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Revenue Goals
-                </label>
-                <Input placeholder="What are your monthly revenue goals?" />
+              <p className="text-gray-700 mb-4">
+                "My newsletter readers love useful tools. Now I can recommend products I believe in 
+                and earn meaningful revenue."
+              </p>
+              <div className="flex items-center text-green-600 font-semibold">
+                <TrendingUp className="w-4 h-4 mr-1" />
+                $3,100/month
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-              <Button className="w-full bg-primary-500 hover:bg-primary-600 text-white text-lg py-3">
-                Submit Application
+      {/* Product Marketplace Preview */}
+      <section className="py-24 px-4">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-4">
+              Products Ready to Promote
+            </h2>
+            <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
+              High-quality SaaS products your audience will love
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <Card className="hover:shadow-xl transition-shadow cursor-pointer">
+              <CardContent className="p-6">
+                <div className="bg-gradient-to-br from-pink-100 to-purple-100 rounded-lg p-4 mb-4">
+                  <Heart className="w-8 h-8 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Aww Honey</h3>
+                <p className="text-gray-600 mb-4">AI therapy companion with personality</p>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-sm text-gray-500">Commission per sale:</span>
+                  <span className="font-semibold text-green-600">$5.55/mo</span>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Active users:</span>
+                    <span>10,000+</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Avg rating:</span>
+                    <span>4.8/5.0</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-xl transition-shadow cursor-pointer">
+              <CardContent className="p-6">
+                <div className="bg-gradient-to-br from-blue-100 to-green-100 rounded-lg p-4 mb-4">
+                  <MessageSquare className="w-8 h-8 text-blue-600" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">FlexLingo</h3>
+                <p className="text-gray-600 mb-4">WhatsApp translator for global chat</p>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-sm text-gray-500">Commission per sale:</span>
+                  <span className="font-semibold text-green-600">$9.99/mo</span>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Languages:</span>
+                    <span>25+</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Growth rate:</span>
+                    <span>+45% MoM</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-xl transition-shadow cursor-pointer">
+              <CardContent className="p-6">
+                <div className="bg-gradient-to-br from-yellow-100 to-orange-100 rounded-lg p-4 mb-4">
+                  <Target className="w-8 h-8 text-orange-600" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">TaskFlow Pro</h3>
+                <p className="text-gray-600 mb-4">Visual project management for teams</p>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-sm text-gray-500">Commission per sale:</span>
+                  <span className="font-semibold text-green-600">$24.99/mo</span>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Team size:</span>
+                    <span>5-50 users</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Churn rate:</span>
+                    <span>&lt;2%</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center mt-12">
+            <Button asChild size="lg" variant="outline" className="border-primary-500 text-primary-600 hover:bg-primary-50">
+              <Link to="/signup">
+                View All Products
+                <ChevronRight className="w-5 h-5 ml-2" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQs */}
+      <section className="py-24 px-4 bg-gray-50">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-4">
+              Frequently Asked Questions
+            </h2>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg p-6">
+              <h3 className="text-lg font-semibold mb-2">How much can I really earn?</h3>
+              <p className="text-gray-600">
+                There's no limit! You earn 50% of every subscription payment from customers you refer. 
+                Our top influencers earn $2,000-$5,000+ per month. Your earnings depend on your audience size, 
+                engagement, and the products you promote.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-lg p-6">
+              <h3 className="text-lg font-semibold mb-2">When do I get paid?</h3>
+              <p className="text-gray-600">
+                We pay out monthly via direct deposit or PayPal. Payments are processed on the 1st of each month 
+                for the previous month's earnings. Minimum payout is $50.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-lg p-6">
+              <h3 className="text-lg font-semibold mb-2">Do I need a large following?</h3>
+              <p className="text-gray-600">
+                Not at all! We welcome influencers of all sizes. What matters most is engagement and alignment 
+                with your audience. We've seen micro-influencers (1K-10K followers) earn significant revenue 
+                with the right product match.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-lg p-6">
+              <h3 className="text-lg font-semibold mb-2">Can I promote multiple products?</h3>
+              <p className="text-gray-600">
+                Yes! You can apply to promote as many products as you want. We recommend focusing on 2-3 
+                products that best align with your audience for optimal results.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-lg p-6">
+              <h3 className="text-lg font-semibold mb-2">What if a customer cancels?</h3>
+              <p className="text-gray-600">
+                You earn 50% for as long as the customer remains subscribed. If they cancel, your recurring 
+                commission stops, but you keep everything earned up to that point. Our products have very low 
+                churn rates (typically under 5%).
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 px-4 bg-gradient-to-r from-primary-500 to-primary-600">
+        <div className="container mx-auto text-center">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Start Earning Today
+            </h2>
+            <p className="text-xl text-white/90 mb-8">
+              Join hundreds of influencers building sustainable income streams
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button asChild size="lg" className="bg-white text-primary-600 hover:bg-gray-100 px-8 py-4 text-lg">
+                <Link to="/signup">
+                  Apply Now
+                  <Rocket className="w-5 h-5 ml-2" />
+                </Link>
               </Button>
-            </CardContent>
-          </Card>
+              <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white/10 px-8 py-4 text-lg">
+                <Link to="/contact">
+                  Talk to Our Team
+                </Link>
+              </Button>
+            </div>
+          </div>
         </div>
       </section>
     </div>
