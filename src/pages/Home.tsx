@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
@@ -15,13 +15,20 @@ import {
   DollarSign,
   MessageSquare,
   Zap,
-  CheckCircle
+  CheckCircle,
+  Send,
+  Bot,
+  User
 } from "lucide-react";
 
 const Home = () => {
   const [activeDemo, setActiveDemo] = useState<'you-build' | 'we-build' | 'build-together'>('you-build');
   const [isPlaying, setIsPlaying] = useState(true);
   const [demoStep, setDemoStep] = useState(0);
+  const [userPrompt, setUserPrompt] = useState('');
+  const [messages, setMessages] = useState<Array<{role: 'user' | 'assistant', content: string}>>([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   // Auto-cycle through demos
   useEffect(() => {
@@ -33,6 +40,35 @@ const Home = () => {
 
     return () => clearInterval(interval);
   }, [isPlaying, activeDemo]);
+
+  // Handle prompt submission
+  const handlePromptSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!userPrompt.trim()) return;
+
+    // Add user message
+    const newUserMessage = { role: 'user' as const, content: userPrompt };
+    setMessages(prev => [...prev, newUserMessage]);
+    setUserPrompt('');
+    setIsTyping(true);
+
+    // Simulate AI response
+    setTimeout(() => {
+      const aiResponse = {
+        role: 'assistant' as const,
+        content: `I'll help you build ${userPrompt}. Let me create a visual flow for your application with AI-powered components and real-time collaboration features.`
+      };
+      setMessages(prev => [...prev, aiResponse]);
+      setIsTyping(false);
+    }, 1500);
+  };
+
+  // Scroll to bottom when new messages appear
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   // Interactive Demo Component
   const InteractiveDemo = () => {
@@ -278,81 +314,164 @@ const Home = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section with Interactive Demo */}
-      <section className="py-12 px-4">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
-            <div>
-              <h1 className="text-5xl md:text-6xl font-bold text-neutral-900 mb-6 leading-tight">
-                Build Smarter,
-                <span className="text-gradient block">Not Harder</span>
-              </h1>
-              <p className="text-xl md:text-2xl text-neutral-600 mb-8 leading-relaxed">
-                AI-powered development tools, expert collaboration, and marketing partnerships - all in one platform
-              </p>
-              
-              {/* Demo Selector */}
-              <div className="flex flex-wrap gap-2 mb-6">
+      {/* Hero Section with Gradient Background and Interactive Elements */}
+      <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        {/* Animated Particles */}
+        <div className="absolute inset-0">
+          <div className="absolute w-64 h-64 bg-green-500/10 rounded-full blur-3xl animate-pulse" style={{ top: '10%', left: '5%', animationDuration: '4s' }} />
+          <div className="absolute w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ bottom: '20%', right: '10%', animationDuration: '6s' }} />
+          <div className="absolute w-48 h-48 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ top: '60%', left: '30%', animationDuration: '5s' }} />
+        </div>
+
+        <div className="relative container mx-auto px-4 py-20">
+          {/* Hero Content */}
+          <div className="text-center mb-12">
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+              Turn Your Vision Into
+              <span className="block bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+                Reality
+              </span>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-12">
+              Build applications 10x faster with AI, collaborate with experts, or earn while you promote
+            </p>
+
+            {/* Interactive Prompt */}
+            <div className="max-w-2xl mx-auto mb-16">
+              <form onSubmit={handlePromptSubmit} className="relative">
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-green-400 to-emerald-400 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-500"></div>
+                  <div className="relative flex items-center bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-gray-700">
+                    <Sparkles className="w-6 h-6 text-green-400 ml-6" />
+                    <input
+                      type="text"
+                      value={userPrompt}
+                      onChange={(e) => setUserPrompt(e.target.value)}
+                      placeholder="What do you want to build today?"
+                      className="flex-1 bg-transparent text-white placeholder-gray-400 px-4 py-6 text-lg focus:outline-none"
+                    />
+                    <button
+                      type="submit"
+                      className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-xl mr-3 hover:from-green-600 hover:to-emerald-600 transition-all duration-200 flex items-center gap-2"
+                    >
+                      <span>Start Building</span>
+                      <Send className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </form>
+
+              {/* Example prompts */}
+              <div className="flex flex-wrap gap-2 mt-4 justify-center">
                 <button
-                  onClick={() => setActiveDemo('you-build')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                    activeDemo === 'you-build' 
-                      ? 'bg-primary-500 text-white' 
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                  onClick={() => setUserPrompt('a social media dashboard')}
+                  className="text-sm text-gray-400 hover:text-white bg-gray-800/50 hover:bg-gray-700/50 px-3 py-1 rounded-full transition-all"
                 >
-                  <Code2 className="w-4 h-4 inline mr-2" />
-                  Visual Development
+                  Social media dashboard
                 </button>
                 <button
-                  onClick={() => setActiveDemo('we-build')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                    activeDemo === 'we-build' 
-                      ? 'bg-primary-500 text-white' 
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                  onClick={() => setUserPrompt('an e-commerce platform')}
+                  className="text-sm text-gray-400 hover:text-white bg-gray-800/50 hover:bg-gray-700/50 px-3 py-1 rounded-full transition-all"
                 >
-                  <Users className="w-4 h-4 inline mr-2" />
-                  Expert Teams
+                  E-commerce platform
                 </button>
                 <button
-                  onClick={() => setActiveDemo('build-together')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                    activeDemo === 'build-together' 
-                      ? 'bg-primary-500 text-white' 
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                  onClick={() => setUserPrompt('a project management tool')}
+                  className="text-sm text-gray-400 hover:text-white bg-gray-800/50 hover:bg-gray-700/50 px-3 py-1 rounded-full transition-all"
                 >
-                  <DollarSign className="w-4 h-4 inline mr-2" />
-                  Earn 50%
-                </button>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-4 items-start">
-                <Button 
-                  size="lg" 
-                  className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 text-lg"
-                  onClick={() => {
-                    document.getElementById('three-ways-to-build')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  Explore Options
-                  <ChevronRight className="w-5 h-5 ml-2" />
-                </Button>
-                <button
-                  onClick={() => setIsPlaying(!isPlaying)}
-                  className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
-                >
-                  {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-                  <span>{isPlaying ? 'Pause' : 'Play'} Demo</span>
+                  Project management tool
                 </button>
               </div>
             </div>
 
-            {/* Right - Interactive Demo */}
-            <div className="h-[500px] lg:h-[600px]">
-              <InteractiveDemo />
+            {/* Split Screen Demo */}
+            {messages.length > 0 && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
+                {/* Chat Interface */}
+                <div className="bg-gray-900/50 backdrop-blur-xl rounded-2xl border border-gray-700 p-6">
+                  <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+                    <MessageSquare className="w-5 h-5 text-green-400" />
+                    AI Assistant Chat
+                  </h3>
+                  <div ref={chatContainerRef} className="h-96 overflow-y-auto space-y-4">
+                    {messages.map((msg, idx) => (
+                      <div key={idx} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        {msg.role === 'assistant' && (
+                          <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <Bot className="w-5 h-5 text-white" />
+                          </div>
+                        )}
+                        <div className={`max-w-[80%] p-3 rounded-lg ${
+                          msg.role === 'user' 
+                            ? 'bg-blue-600 text-white' 
+                            : 'bg-gray-800 text-gray-200'
+                        }`}>
+                          {msg.content}
+                        </div>
+                        {msg.role === 'user' && (
+                          <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                            <User className="w-5 h-5 text-white" />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                    {isTyping && (
+                      <div className="flex gap-3 justify-start">
+                        <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                          <Bot className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="bg-gray-800 text-gray-200 p-3 rounded-lg">
+                          <div className="flex gap-1">
+                            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Live Preview */}
+                <div className="bg-gray-900/50 backdrop-blur-xl rounded-2xl border border-gray-700 p-6">
+                  <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+                    <Palette className="w-5 h-5 text-green-400" />
+                    Live Preview
+                  </h3>
+                  <div className="h-96 bg-gray-800 rounded-lg overflow-hidden">
+                    <InteractiveDemo />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* CTA Button */}
+            <div className="mt-8">
+              <Button 
+                size="lg" 
+                className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-4 text-lg"
+                onClick={() => {
+                  document.getElementById('three-ways-to-build')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                Explore Your Options
+                <ChevronRight className="w-5 h-5 ml-2" />
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Trust Indicators */}
+        <div className="absolute bottom-0 left-0 right-0 bg-gray-900/50 backdrop-blur-xl border-t border-gray-800">
+          <div className="container mx-auto px-4 py-6">
+            <div className="flex flex-wrap items-center justify-center gap-8 text-gray-400">
+              <span className="text-sm">Trusted by 500+ builders worldwide</span>
+              <span className="text-sm">•</span>
+              <span className="text-sm">SOC2 Compliant</span>
+              <span className="text-sm">•</span>
+              <span className="text-sm">99.9% Uptime</span>
+              <span className="text-sm">•</span>
+              <span className="text-sm">24/7 AI Support</span>
             </div>
           </div>
         </div>

@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexperts - Interactive Hero Mockup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+        }
+        
+        /* Gradient backgrounds */
+        .hero-gradient {
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(to right, #16A34A, #22C55E, #4ADE80);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .text-gradient-animated {
+            background: linear-gradient(270deg, #16A34A, #22C55E, #4ADE80, #22C55E, #16A34A);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 8s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Floating particles animation */
+        .particle {
+            position: absolute;
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        .particle-1 {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: 5%;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .particle-2 {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 10%;
+            animation: float 25s infinite ease-in-out reverse;
+        }
+        
+        .particle-3 {
+            width: 100px;
+            height: 100px;
+            bottom: 20%;
+            left: 30%;
+            animation: float 30s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.1); }
+            50% { transform: translate(-20px, 20px) scale(0.9); }
+            75% { transform: translate(-30px, -10px) scale(1.05); }
+        }
+        
+        /* Glass morphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+        }
+        
+        /* Chat animations */
+        .chat-message {
+            animation: slideInUp 0.5s ease-out;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Typing indicator */
+        .typing-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #22C55E;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.7;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+        
+        /* Preview window animation */
+        .preview-window {
+            animation: fadeInScale 0.6s ease-out;
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        /* Button hover effects */
+        .cta-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .cta-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        /* Feature card animations */
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Split screen layout */
+        .split-screen {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        @media (max-width: 768px) {
+            .split-screen {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Code preview syntax highlighting */
+        .code-line {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .code-keyword { color: #FF79C6; }
+        .code-string { color: #F1FA8C; }
+        .code-function { color: #50FA7B; }
+        .code-comment { color: #6272A4; }
+        
+        /* Interactive prompt field */
+        .prompt-field {
+            transition: all 0.3s ease;
+        }
+        
+        .prompt-field:focus-within {
+            transform: scale(1.02);
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+        }
+        
+        /* Logo ticker animation */
+        .logo-ticker {
+            animation: scroll 30s linear infinite;
+        }
+        
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+    </style>
+</head>
+<body class="bg-gray-900">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold">
+                        <span class="text-gradient-animated">flexperts</span>
+                    </h1>
+                </div>
+                <div class="flex items-center gap-6">
+                    <a href="#features" class="text-gray-300 hover:text-white transition-colors">Features</a>
+                    <a href="#pricing" class="text-gray-300 hover:text-white transition-colors">Pricing</a>
+                    <a href="#about" class="text-gray-300 hover:text-white transition-colors">About</a>
+                    <a href="/signin" class="text-gray-300 hover:text-white transition-colors">Sign In</a>
+                    <button class="cta-button bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-medium transition-all">
+                        Start Building
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient min-h-screen flex items-center relative pt-20">
+        <!-- Animated particles -->
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <!-- Hero content -->
+            <div class="text-center mb-12">
+                <h1 class="text-5xl md:text-7xl font-bold text-white mb-6">
+                    Build Apps <span class="text-gradient-animated">10x Faster</span>
+                    <br>With AI & Experts
+                </h1>
+                <p class="text-xl text-gray-300 max-w-2xl mx-auto mb-8">
+                    From idea to production in days, not months. Choose AI-powered tools, expert teams, or partner as an influencer.
+                </p>
+            </div>
+
+            <!-- Interactive Demo Section -->
+            <div class="max-w-6xl mx-auto">
+                <!-- Central Prompt Field -->
+                <div class="prompt-field glass rounded-xl p-6 mb-8">
+                    <div class="flex items-center gap-4">
+                        <div class="flex-1 relative">
+                            <input 
+                                id="prompt-input"
+                                type="text" 
+                                placeholder="Try it now: 'Build me a task management app with AI features'"
+                                class="w-full bg-transparent text-white placeholder-gray-400 text-lg py-3 px-4 pr-12 focus:outline-none"
+                                onkeypress="handlePromptSubmit(event)"
+                            >
+                            <div class="absolute right-3 top-1/2 -translate-y-1/2">
+                                <button onclick="submitPrompt()" class="text-green-400 hover:text-green-300 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 mt-3">
+                        <button onclick="setPrompt('Build me an e-commerce store')" class="text-xs bg-gray-800 text-gray-300 px-3 py-1 rounded-full hover:bg-gray-700 transition-colors">
+                            E-commerce store
+                        </button>
+                        <button onclick="setPrompt('Create a SaaS dashboard')" class="text-xs bg-gray-800 text-gray-300 px-3 py-1 rounded-full hover:bg-gray-700 transition-colors">
+                            SaaS dashboard
+                        </button>
+                        <button onclick="setPrompt('Design a mobile app')" class="text-xs bg-gray-800 text-gray-300 px-3 py-1 rounded-full hover:bg-gray-700 transition-colors">
+                            Mobile app
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Split Screen Demo -->
+                <div class="split-screen">
+                    <!-- Chat Side -->
+                    <div class="glass rounded-xl p-6">
+                        <div class="flex items-center gap-2 mb-4">
+                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                            <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                            <span class="text-gray-400 text-sm ml-2">Ask Flexi</span>
+                        </div>
+                        
+                        <div id="chat-container" class="space-y-4 h-96 overflow-y-auto">
+                            <!-- AI Message -->
+                            <div class="chat-message">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm text-gray-400 mb-1">Ask Flexi</p>
+                                        <div class="bg-gray-800 rounded-lg p-3">
+                                            <p class="text-white">Hi! I'm Flexi. What would you like to build today? I can help you create anything from simple websites to complex applications.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Typing indicator (hidden by default) -->
+                            <div id="typing-indicator" class="hidden">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm text-gray-400 mb-1">Ask Flexi</p>
+                                        <div class="bg-gray-800 rounded-lg p-3">
+                                            <div class="flex gap-1">
+                                                <span class="typing-dot"></span>
+                                                <span class="typing-dot"></span>
+                                                <span class="typing-dot"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preview Side -->
+                    <div class="glass rounded-xl overflow-hidden">
+                        <div class="bg-gray-800 px-4 py-3 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                            </div>
+                            <span class="text-gray-400 text-sm">Live Preview</span>
+                            <div class="flex gap-2">
+                                <button class="text-gray-400 hover:text-white transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                                    </svg>
+                                </button>
+                                <button class="text-gray-400 hover:text-white transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="preview-container" class="bg-gray-900 p-6 h-96 overflow-y-auto">
+                            <!-- Default preview content -->
+                            <div class="text-center py-12">
+                                <div class="w-24 h-24 bg-gray-800 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                                    <svg class="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+                                    </svg>
+                                </div>
+                                <p class="text-gray-400">Your app preview will appear here</p>
+                                <p class="text-gray-500 text-sm mt-2">Start by typing in the prompt above</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Buttons -->
+                <div class="flex justify-center gap-4 mt-8">
+                    <button class="cta-button bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all">
+                        Start Building Free
+                    </button>
+                    <button class="glass text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white/10 transition-all">
+                        Watch Demo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Indicators -->
+    <section class="py-12 bg-gray-800">
+        <div class="container mx-auto px-4">
+            <p class="text-center text-gray-400 mb-6">Trusted by developers and companies worldwide</p>
+            <div class="overflow-hidden">
+                <div class="flex gap-12 items-center logo-ticker">
+                    <!-- Duplicate for infinite scroll -->
+                    <div class="flex gap-12 items-center">
+                        <div class="text-gray-500 font-bold text-xl">TechCorp</div>
+                        <div class="text-gray-500 font-bold text-xl">StartupXYZ</div>
+                        <div class="text-gray-500 font-bold text-xl">DevTools Inc</div>
+                        <div class="text-gray-500 font-bold text-xl">CloudFirst</div>
+                        <div class="text-gray-500 font-bold text-xl">AI Ventures</div>
+                        <div class="text-gray-500 font-bold text-xl">NextGen Apps</div>
+                    </div>
+                    <div class="flex gap-12 items-center">
+                        <div class="text-gray-500 font-bold text-xl">TechCorp</div>
+                        <div class="text-gray-500 font-bold text-xl">StartupXYZ</div>
+                        <div class="text-gray-500 font-bold text-xl">DevTools Inc</div>
+                        <div class="text-gray-500 font-bold text-xl">CloudFirst</div>
+                        <div class="text-gray-500 font-bold text-xl">AI Ventures</div>
+                        <div class="text-gray-500 font-bold text-xl">NextGen Apps</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Cards Section -->
+    <section class="py-20 bg-gray-900">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center text-white mb-4">Three Ways to Build</h2>
+            <p class="text-xl text-gray-400 text-center mb-12 max-w-2xl mx-auto">
+                Choose the path that fits your needs and budget
+            </p>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- You Build Card -->
+                <div class="feature-card glass rounded-xl p-8 text-center">
+                    <div class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-4xl font-bold text-green-400">1</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">You Build</h3>
+                    <p class="text-gray-400 mb-6">AI-powered tools for solo developers and small teams</p>
+                    <ul class="text-left space-y-3 mb-8">
+                        <li class="flex items-center gap-2 text-gray-300">
+                            <svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Instant code generation</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-gray-300">
+                            <svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Visual development</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-gray-300">
+                            <svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>$11.11/month</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition-all">
+                        Start Building
+                    </button>
+                </div>
+
+                <!-- We Build Card -->
+                <div class="feature-card glass rounded-xl p-8 text-center">
+                    <div class="w-20 h-20 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-4xl font-bold text-blue-400">2</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">We Build</h3>
+                    <p class="text-gray-400 mb-6">Expert teams for enterprise projects</p>
+                    <ul class="text-left space-y-3 mb-8">
+                        <li class="flex items-center gap-2 text-gray-300">
+                            <svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Dedicated experts</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-gray-300">
+                            <svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Fixed-price projects</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-gray-300">
+                            <svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>2-week delivery</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-semibold transition-all">
+                        Get a Quote
+                    </button>
+                </div>
+
+                <!-- Build Together Card -->
+                <div class="feature-card glass rounded-xl p-8 text-center">
+                    <div class="w-20 h-20 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-4xl font-bold text-purple-400">3</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Build Together</h3>
+                    <p class="text-gray-400 mb-6">Partner program for influencers</p>
+                    <ul class="text-left space-y-3 mb-8">
+                        <li class="flex items-center gap-2 text-gray-300">
+                            <svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>50% revenue share</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-gray-300">
+                            <svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Lifetime commissions</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-gray-300">
+                            <svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Marketing support</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg font-semibold transition-all">
+                        Apply Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Interactive demo functionality
+        function setPrompt(text) {
+            document.getElementById('prompt-input').value = text;
+        }
+
+        function handlePromptSubmit(event) {
+            if (event.key === 'Enter') {
+                submitPrompt();
+            }
+        }
+
+        function submitPrompt() {
+            const input = document.getElementById('prompt-input');
+            const prompt = input.value.trim();
+            
+            if (!prompt) return;
+
+            // Add user message to chat
+            addUserMessage(prompt);
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Simulate AI response
+            setTimeout(() => {
+                hideTypingIndicator();
+                addAIResponse(prompt);
+                updatePreview(prompt);
+            }, 2000);
+            
+            // Clear input
+            input.value = '';
+        }
+
+        function addUserMessage(message) {
+            const chatContainer = document.getElementById('chat-container');
+            const messageHTML = `
+                <div class="chat-message">
+                    <div class="flex items-start gap-3 justify-end">
+                        <div class="flex-1 text-right">
+                            <p class="text-sm text-gray-400 mb-1">You</p>
+                            <div class="bg-green-600 rounded-lg p-3 inline-block">
+                                <p class="text-white">${message}</p>
+                            </div>
+                        </div>
+                        <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            `;
+            chatContainer.insertAdjacentHTML('beforeend', messageHTML);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function addAIResponse(prompt) {
+            const chatContainer = document.getElementById('chat-container');
+            let response = '';
+            
+            if (prompt.toLowerCase().includes('e-commerce') || prompt.toLowerCase().includes('store')) {
+                response = "Perfect! I'll help you create an e-commerce store. I'm generating a modern, responsive design with product listings, shopping cart, and checkout flow. The preview on the right shows your store coming to life!";
+            } else if (prompt.toLowerCase().includes('dashboard') || prompt.toLowerCase().includes('saas')) {
+                response = "Great choice! I'm creating a professional SaaS dashboard with analytics, user management, and real-time data visualization. Check out the preview to see your dashboard taking shape!";
+            } else if (prompt.toLowerCase().includes('task') || prompt.toLowerCase().includes('management')) {
+                response = "Excellent! I'm building a task management app with AI-powered features like smart prioritization, natural language task creation, and predictive scheduling. Your app is being generated in real-time!";
+            } else {
+                response = `I understand you want to build "${prompt}". I'm analyzing your requirements and generating the perfect solution. The preview shows your app coming together with modern UI components and best practices!`;
+            }
+            
+            const messageHTML = `
+                <div class="chat-message">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-400 mb-1">Ask Flexi</p>
+                            <div class="bg-gray-800 rounded-lg p-3">
+                                <p class="text-white">${response}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            chatContainer.insertAdjacentHTML('beforeend', messageHTML);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            document.getElementById('typing-indicator').classList.remove('hidden');
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            document.getElementById('typing-indicator').classList.add('hidden');
+        }
+
+        function updatePreview(prompt) {
+            const previewContainer = document.getElementById('preview-container');
+            let previewHTML = '';
+            
+            if (prompt.toLowerCase().includes('e-commerce') || prompt.toLowerCase().includes('store')) {
+                previewHTML = `
+                    <div class="preview-window">
+                        <div class="bg-white rounded-lg p-6">
+                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Featured Products</h2>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="border rounded-lg p-4">
+                                    <div class="bg-gray-200 h-32 rounded mb-3"></div>
+                                    <h3 class="font-semibold">Product Name</h3>
+                                    <p class="text-green-600 font-bold">$99.99</p>
+                                </div>
+                                <div class="border rounded-lg p-4">
+                                    <div class="bg-gray-200 h-32 rounded mb-3"></div>
+                                    <h3 class="font-semibold">Product Name</h3>
+                                    <p class="text-green-600 font-bold">$149.99</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (prompt.toLowerCase().includes('dashboard') || prompt.toLowerCase().includes('saas')) {
+                previewHTML = `
+                    <div class="preview-window">
+                        <div class="bg-white rounded-lg p-6">
+                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Analytics Dashboard</h2>
+                            <div class="grid grid-cols-3 gap-4 mb-6">
+                                <div class="bg-blue-50 rounded-lg p-4">
+                                    <p class="text-sm text-gray-600">Total Users</p>
+                                    <p class="text-2xl font-bold text-blue-600">12,543</p>
+                                </div>
+                                <div class="bg-green-50 rounded-lg p-4">
+                                    <p class="text-sm text-gray-600">Revenue</p>
+                                    <p class="text-2xl font-bold text-green-600">$84,291</p>
+                                </div>
+                                <div class="bg-purple-50 rounded-lg p-4">
+                                    <p class="text-sm text-gray-600">Growth</p>
+                                    <p class="text-2xl font-bold text-purple-600">+23%</p>
+                                </div>
+                            </div>
+                            <div class="bg-gray-100 h-48 rounded-lg flex items-center justify-center">
+                                <span class="text-gray-500">Chart Visualization</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                previewHTML = `
+                    <div class="preview-window">
+                        <div class="bg-white rounded-lg p-6">
+                            <div class="mb-6">
+                                <h2 class="text-2xl font-bold text-gray-900 mb-2">Your App is Being Built!</h2>
+                                <div class="bg-green-100 rounded-lg p-4">
+                                    <p class="text-green-800">✨ AI is generating your ${prompt}</p>
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="bg-gray-100 h-12 rounded animate-pulse"></div>
+                                <div class="bg-gray-100 h-32 rounded animate-pulse"></div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="bg-gray-100 h-20 rounded animate-pulse"></div>
+                                    <div class="bg-gray-100 h-20 rounded animate-pulse"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            previewContainer.innerHTML = previewHTML;
+        }
+
+        // Add some initial animation on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Focus on prompt input
+            document.getElementById('prompt-input').focus();
+        });
+    </script>
+</body>
+</html>
