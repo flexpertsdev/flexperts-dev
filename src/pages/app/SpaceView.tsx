@@ -73,7 +73,7 @@ I can generate the complete implementation for you.`,
     {
       id: '5',
       type: 'bot',
-      content: 'Perfect! Ive generated a complete authentication system for you. Here are the components:'
+      content: 'Perfect! I\'ve generated a complete authentication system for you. Here are the components:',
       timestamp: 'Yesterday at 3:49 PM',
       attachments: [
         {
