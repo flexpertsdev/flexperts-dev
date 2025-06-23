@@ -206,30 +206,6 @@
                 </div>
             </div>
 
-            <!-- App Mode Switcher -->
-            <div class="border-t border-gray-200 p-2">
-                <div class="grid grid-cols-3 gap-1 bg-gray-100 p-1 rounded-lg">
-                    <button onclick="switchMode('you-build')" id="youBuildBtn" class="mode-indicator active py-2 px-3 rounded-md bg-white shadow-sm text-center transition-all">
-                        <svg class="w-5 h-5 mx-auto mb-1 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-                        </svg>
-                        <span class="text-xs font-medium">You Build</span>
-                    </button>
-                    <button onclick="switchMode('we-build')" id="weBuildBtn" class="mode-indicator py-2 px-3 rounded-md text-center transition-all hover:bg-gray-50">
-                        <svg class="w-5 h-5 mx-auto mb-1 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                        <span class="text-xs font-medium">We Build</span>
-                    </button>
-                    <button onclick="switchMode('build-together')" id="buildTogetherBtn" class="mode-indicator py-2 px-3 rounded-md text-center transition-all hover:bg-gray-50">
-                        <svg class="w-5 h-5 mx-auto mb-1 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                        </svg>
-                        <span class="text-xs font-medium">Build Together</span>
-                    </button>
-                </div>
-            </div>
-
             <!-- User Menu -->
             <div class="border-t border-gray-200 p-4">
                 <button class="w-full flex items-center justify-between hover:bg-gray-50 rounded-lg p-2 transition-colors">
@@ -244,6 +220,21 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
+            </div>
+
+            <!-- Mode Switcher (Bottom Left) -->
+            <div class="p-4 border-t border-gray-100">
+                <div class="bg-gray-100 rounded-lg p-1 flex">
+                    <button onclick="switchMode('you-build')" id="youBuildBtn" class="flex-1 px-3 py-2 bg-white rounded-md text-sm font-medium text-green-600 shadow-sm">
+                        You Build
+                    </button>
+                    <button onclick="switchMode('we-build')" id="weBuildBtn" class="flex-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900">
+                        We Build
+                    </button>
+                    <button onclick="switchMode('build-together')" id="buildTogetherBtn" class="flex-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900">
+                        Build Together
+                    </button>
+                </div>
             </div>
         </aside>
 
@@ -552,16 +543,16 @@
             }
 
             // Update button states
-            document.querySelectorAll('.mode-indicator').forEach(btn => {
-                btn.classList.remove('active', 'bg-white', 'shadow-sm');
-                btn.querySelector('svg').classList.remove('text-green-600');
-                btn.querySelector('svg').classList.add('text-gray-600');
-            });
+            document.getElementById('youBuildBtn').classList.remove('bg-white', 'shadow-sm', 'text-green-600');
+            document.getElementById('youBuildBtn').classList.add('text-gray-600', 'hover:text-gray-900');
+            document.getElementById('weBuildBtn').classList.remove('bg-white', 'shadow-sm', 'text-green-600');
+            document.getElementById('weBuildBtn').classList.add('text-gray-600', 'hover:text-gray-900');
+            document.getElementById('buildTogetherBtn').classList.remove('bg-white', 'shadow-sm', 'text-green-600');
+            document.getElementById('buildTogetherBtn').classList.add('text-gray-600', 'hover:text-gray-900');
 
             const activeBtn = document.getElementById(mode.replace('-', '') + 'Btn');
-            activeBtn.classList.add('active', 'bg-white', 'shadow-sm');
-            activeBtn.querySelector('svg').classList.remove('text-gray-600');
-            activeBtn.querySelector('svg').classList.add('text-green-600');
+            activeBtn.classList.remove('text-gray-600', 'hover:text-gray-900');
+            activeBtn.classList.add('bg-white', 'shadow-sm', 'text-green-600');
 
             // Close sidebar on mobile after switching
             if (window.innerWidth < 768) {
