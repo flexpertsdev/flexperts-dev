@@ -1,0 +1,2343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexperts Design System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Tailwind Config */
+        body {
+            font-family: 'Quicksand', sans-serif;
+        }
+        
+        /* Override Tailwind defaults with Flexperts colors */
+        :root {
+            --primary-50: #DCFCE7;
+            --primary-100: #BBF7D0;
+            --primary-200: #86EFAC;
+            --primary-300: #4ADE80;
+            --primary-400: #22C55E;
+            --primary-500: #22C55E;
+            --primary-600: #16A34A;
+            --primary-700: #15803D;
+            --primary-800: #166534;
+            --primary-900: #14532D;
+            
+            --neutral-50: #F9FAFB;
+            --neutral-100: #F3F4F6;
+            --neutral-200: #E5E7EB;
+            --neutral-300: #D1D5DB;
+            --neutral-400: #9CA3AF;
+            --neutral-500: #6B7280;
+            --neutral-600: #4B5563;
+            --neutral-700: #374151;
+            --neutral-800: #1F2937;
+            --neutral-900: #111827;
+            
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+        }
+        
+        /* Text Gradient */
+        .text-gradient {
+            background: linear-gradient(to right, var(--primary-600), var(--primary-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Glass Card */
+        .glass-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Custom Focus Styles */
+        input:focus, 
+        textarea:focus, 
+        select:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+        }
+        
+        /* Custom Checkbox */
+        input[type="checkbox"] {
+            accent-color: var(--primary-500);
+        }
+        
+        input[type="checkbox"]:checked {
+            background-color: var(--primary-500);
+            border-color: var(--primary-500);
+        }
+        
+        /* Custom Radio */
+        input[type="radio"] {
+            accent-color: var(--primary-500);
+        }
+        
+        /* Switch Component */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .switch-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--neutral-300);
+            transition: .3s;
+            border-radius: 24px;
+        }
+        
+        .switch-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .switch-slider {
+            background-color: var(--primary-500);
+        }
+        
+        input:checked + .switch-slider:before {
+            transform: translateX(20px);
+        }
+        
+        /* Component States */
+        .component-state {
+            transition: all 0.2s ease;
+        }
+        
+        /* Sidebar */
+        .sidebar-item {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            width: 280px;
+            background: white;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar-item.mobile {
+            transform: translateX(-100%);
+        }
+        
+        .sidebar-item.mobile.open {
+            transform: translateX(0);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        /* Hide all scrollbars globally */
+        * {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        *::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Bottom Sheet */
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 24px 24px 0 0;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            max-height: 90vh;
+            z-index: 1000;
+        }
+        
+        .bottom-sheet.show {
+            transform: translateY(0);
+        }
+        
+        .bottom-sheet-handle {
+            width: 48px;
+            height: 4px;
+            background: var(--neutral-300);
+            border-radius: 2px;
+            margin: 12px auto;
+        }
+        
+        /* Chat Bubbles */
+        .chat-bubble {
+            max-width: 75%;
+            word-wrap: break-word;
+        }
+        
+        .chat-bubble.sent {
+            background: var(--primary-500);
+            color: white;
+            border-radius: 18px 18px 4px 18px;
+            margin-left: auto;
+        }
+        
+        .chat-bubble.received {
+            background: var(--neutral-100);
+            color: var(--neutral-900);
+            border-radius: 18px 18px 18px 4px;
+        }
+        
+        /* Button Radio */
+        .button-radio {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .button-radio input {
+            position: absolute;
+            opacity: 0;
+        }
+        
+        .button-radio-label {
+            display: block;
+            padding: 12px 24px;
+            border: 2px solid var(--neutral-300);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .button-radio input:checked + .button-radio-label {
+            background: var(--primary-50);
+            border-color: var(--primary-500);
+            color: var(--primary-700);
+            font-weight: 600;
+        }
+        
+        /* Choice Chips */
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid var(--neutral-300);
+            background: white;
+        }
+        
+        .chip.selected {
+            background: var(--primary-500);
+            color: white;
+            border-color: var(--primary-500);
+        }
+        
+        .chip:hover:not(.selected) {
+            background: var(--neutral-50);
+        }
+        
+        /* Mobile Typography Scale */
+        @media (max-width: 640px) {
+            .mobile-display { font-size: 48px; line-height: 56px; }
+            .mobile-h1 { font-size: 32px; line-height: 40px; }
+            .mobile-h2 { font-size: 28px; line-height: 36px; }
+            .mobile-h3 { font-size: 20px; line-height: 28px; }
+            .mobile-body { font-size: 16px; line-height: 24px; }
+            .mobile-caption { font-size: 14px; line-height: 20px; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Design System Navigation -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold">
+                        Flexperts<span class="text-gradient">.dev</span> Design System
+                    </h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleView('desktop')" id="desktopBtn" class="px-4 py-2 rounded-lg bg-green-100 text-green-700 font-medium">
+                        Desktop
+                    </button>
+                    <button onclick="toggleView('mobile')" id="mobileBtn" class="px-4 py-2 rounded-lg text-gray-600">
+                        Mobile
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-white border-r border-gray-200 min-h-screen sticky top-16 max-h-[calc(100vh-4rem)] overflow-y-auto">
+            <nav class="p-4">
+                <ul class="space-y-1">
+                    <li><a href="#foundations" class="block px-4 py-2 rounded-lg bg-green-50 text-green-700 font-medium">Foundations</a></li>
+                    <li><a href="#colors" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Colors</a></li>
+                    <li><a href="#typography" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Typography</a></li>
+                    <li><a href="#spacing" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Spacing</a></li>
+                    <li><a href="#components" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Components</a></li>
+                    <li><a href="#buttons" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Buttons</a></li>
+                    <li><a href="#forms" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Form Elements</a></li>
+                    <li><a href="#cards" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Cards</a></li>
+                    <li><a href="#navigation" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Navigation</a></li>
+                    <li><a href="#tabs" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Tab Bars</a></li>
+                    <li><a href="#accordions" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Accordions</a></li>
+                    <li><a href="#mobile-nav" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Mobile Navigation</a></li>
+                    <li><a href="#chips" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Chips & Filters</a></li>
+                    <li><a href="#sheets" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Bottom Sheets</a></li>
+                    <li><a href="#modals" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Modal Dialogues</a></li>
+                    <li><a href="#fab" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Floating Action Buttons</a></li>
+                    <li><a href="#sliders" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Sliders</a></li>
+                    <li><a href="#chat" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Chat Interface</a></li>
+                    <li><a href="#multi-step" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Multi-Step Forms</a></li>
+                    <li><a href="#typeform" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Typeform Style</a></li>
+                    <li><a href="#gestures" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Mobile Gestures</a></li>
+                    <li><a href="#layouts" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Layouts</a></li>
+                    <li><a href="#patterns" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Patterns</a></li>
+                    <li><a href="#responsive" class="block px-4 py-2 rounded-lg hover:bg-gray-100">Responsive Design</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <!-- Foundations Section -->
+            <section id="foundations" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Design Foundations</h2>
+                
+                <div class="bg-white rounded-xl p-8 border border-gray-200 mb-8">
+                    <h3 class="text-xl font-semibold mb-4">Design Principles</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <span class="text-2xl">✨</span>
+                            </div>
+                            <h4 class="font-semibold mb-2">Simplicity</h4>
+                            <p class="text-gray-600 text-sm">Clean, minimal design that focuses on functionality</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <span class="text-2xl">🎯</span>
+                            </div>
+                            <h4 class="font-semibold mb-2">Purpose</h4>
+                            <p class="text-gray-600 text-sm">Every element serves a clear user need</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <span class="text-2xl">📱</span>
+                            </div>
+                            <h4 class="font-semibold mb-2">Responsive</h4>
+                            <p class="text-gray-600 text-sm">Seamless experience across all devices</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Colors Section -->
+            <section id="colors" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Color System</h2>
+                
+                <!-- Primary Colors -->
+                <div class="bg-white rounded-xl p-8 border border-gray-200 mb-8">
+                    <h3 class="text-xl font-semibold mb-6">Primary Palette</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                        <div class="text-center">
+                            <div class="w-full h-24 rounded-lg mb-2" style="background-color: var(--primary-50)"></div>
+                            <p class="font-medium">Primary 50</p>
+                            <p class="text-sm text-gray-500">#DCFCE7</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-full h-24 rounded-lg mb-2" style="background-color: var(--primary-100)"></div>
+                            <p class="font-medium">Primary 100</p>
+                            <p class="text-sm text-gray-500">#BBF7D0</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-full h-24 rounded-lg mb-2" style="background-color: var(--primary-400)"></div>
+                            <p class="font-medium text-white">Primary 400</p>
+                            <p class="text-sm text-gray-500">#22C55E</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-full h-24 rounded-lg mb-2" style="background-color: var(--primary-600)"></div>
+                            <p class="font-medium text-white">Primary 600</p>
+                            <p class="text-sm text-gray-500">#16A34A</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-full h-24 rounded-lg mb-2" style="background-color: var(--primary-700)"></div>
+                            <p class="font-medium text-white">Primary 700</p>
+                            <p class="text-sm text-gray-500">#15803D</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Neutral Colors -->
+                <div class="bg-white rounded-xl p-8 border border-gray-200 mb-8">
+                    <h3 class="text-xl font-semibold mb-6">Neutral Palette</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                        <div class="text-center">
+                            <div class="w-full h-24 rounded-lg border mb-2" style="background-color: var(--neutral-50)"></div>
+                            <p class="font-medium">Neutral 50</p>
+                            <p class="text-sm text-gray-500">#F9FAFB</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-full h-24 rounded-lg border mb-2" style="background-color: var(--neutral-300)"></div>
+                            <p class="font-medium">Neutral 300</p>
+                            <p class="text-sm text-gray-500">#D1D5DB</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-full h-24 rounded-lg mb-2" style="background-color: var(--neutral-600)"></div>
+                            <p class="font-medium text-white">Neutral 600</p>
+                            <p class="text-sm text-gray-500">#4B5563</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-full h-24 rounded-lg mb-2" style="background-color: var(--neutral-800)"></div>
+                            <p class="font-medium text-white">Neutral 800</p>
+                            <p class="text-sm text-gray-500">#1F2937</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-full h-24 rounded-lg mb-2" style="background-color: var(--neutral-900)"></div>
+                            <p class="font-medium text-white">Neutral 900</p>
+                            <p class="text-sm text-gray-500">#111827</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Semantic Colors -->
+                <div class="bg-white rounded-xl p-8 border border-gray-200">
+                    <h3 class="text-xl font-semibold mb-6">Semantic Colors</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="text-center">
+                            <div class="w-full h-24 rounded-lg mb-2" style="background-color: var(--success)"></div>
+                            <p class="font-medium text-white">Success</p>
+                            <p class="text-sm text-gray-500">#10B981</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-full h-24 rounded-lg mb-2" style="background-color: var(--error)"></div>
+                            <p class="font-medium text-white">Error</p>
+                            <p class="text-sm text-gray-500">#EF4444</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-full h-24 rounded-lg mb-2" style="background-color: var(--warning)"></div>
+                            <p class="font-medium text-white">Warning</p>
+                            <p class="text-sm text-gray-500">#F59E0B</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-full h-24 rounded-lg mb-2" style="background-color: var(--info)"></div>
+                            <p class="font-medium text-white">Info</p>
+                            <p class="text-sm text-gray-500">#3B82F6</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Typography Section -->
+            <section id="typography" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Typography</h2>
+                
+                <div class="bg-white rounded-xl p-8 border border-gray-200">
+                    <div class="space-y-8">
+                        <!-- Display -->
+                        <div>
+                            <p class="text-sm text-gray-500 mb-2">Display · 72px/80px · Bold</p>
+                            <h1 class="text-7xl font-bold" style="color: var(--neutral-900)">Build Amazing Products</h1>
+                        </div>
+                        
+                        <!-- Heading 1 -->
+                        <div>
+                            <p class="text-sm text-gray-500 mb-2">Heading 1 · 48px/56px · Bold</p>
+                            <h1 class="text-5xl font-bold" style="color: var(--neutral-900)">Transform Your Vision</h1>
+                        </div>
+                        
+                        <!-- Heading 2 -->
+                        <div>
+                            <p class="text-sm text-gray-500 mb-2">Heading 2 · 36px/44px · Bold</p>
+                            <h2 class="text-4xl font-bold" style="color: var(--neutral-900)">Section Title Goes Here</h2>
+                        </div>
+                        
+                        <!-- Heading 3 -->
+                        <div>
+                            <p class="text-sm text-gray-500 mb-2">Heading 3 · 24px/32px · Semibold</p>
+                            <h3 class="text-2xl font-semibold" style="color: var(--neutral-900)">Feature Title</h3>
+                        </div>
+                        
+                        <!-- Body Large -->
+                        <div>
+                            <p class="text-sm text-gray-500 mb-2">Body Large · 20px/28px · Regular</p>
+                            <p class="text-xl" style="color: var(--neutral-600)">This is a large body text used for introductions and important descriptions that need more emphasis.</p>
+                        </div>
+                        
+                        <!-- Body Regular -->
+                        <div>
+                            <p class="text-sm text-gray-500 mb-2">Body Regular · 16px/24px · Regular</p>
+                            <p class="text-base" style="color: var(--neutral-600)">This is regular body text used throughout the application for standard content and descriptions.</p>
+                        </div>
+                        
+                        <!-- Caption -->
+                        <div>
+                            <p class="text-sm text-gray-500 mb-2">Caption · 14px/20px · Regular</p>
+                            <p class="text-sm" style="color: var(--neutral-500)">This is caption text used for labels and secondary information.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Spacing Section -->
+            <section id="spacing" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Spacing System</h2>
+                
+                <div class="bg-white rounded-xl p-8 border border-gray-200">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                        <div>
+                            <p class="text-sm text-gray-500 mb-2">Space 1 · 4px</p>
+                            <div class="bg-green-500 h-1 w-full"></div>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 mb-2">Space 2 · 8px</p>
+                            <div class="bg-green-500 h-2 w-full"></div>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 mb-2">Space 4 · 16px</p>
+                            <div class="bg-green-500 h-4 w-full"></div>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 mb-2">Space 6 · 24px</p>
+                            <div class="bg-green-500 h-6 w-full"></div>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 mb-2">Space 8 · 32px</p>
+                            <div class="bg-green-500 h-8 w-full"></div>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 mb-2">Space 12 · 48px</p>
+                            <div class="bg-green-500 h-12 w-full"></div>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 mb-2">Space 16 · 64px</p>
+                            <div class="bg-green-500 h-16 w-full"></div>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 mb-2">Space 24 · 96px</p>
+                            <div class="bg-green-500 h-24 w-full"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Buttons Section -->
+            <section id="buttons" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Buttons</h2>
+                
+                <div class="bg-white rounded-xl p-8 border border-gray-200">
+                    <div class="space-y-8">
+                        <!-- Primary Buttons -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Primary Buttons</h3>
+                            <div class="flex flex-wrap gap-4" id="desktopButtons">
+                                <button class="px-8 py-3 rounded-lg font-semibold text-white transition-all" style="background-color: var(--primary-500)">
+                                    Default
+                                </button>
+                                <button class="px-8 py-3 rounded-lg font-semibold text-white transition-all hover:shadow-lg transform hover:scale-105" style="background-color: var(--primary-600)">
+                                    Hover
+                                </button>
+                                <button class="px-8 py-3 rounded-lg font-semibold text-white transition-all" style="background-color: var(--primary-700); box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2)">
+                                    Focus
+                                </button>
+                                <button class="px-8 py-3 rounded-lg font-semibold text-white opacity-50 cursor-not-allowed" style="background-color: var(--primary-500)" disabled>
+                                    Disabled
+                                </button>
+                            </div>
+                            <div class="hidden gap-4 mt-4" id="mobileButtons">
+                                <button class="w-full px-6 py-4 rounded-lg font-semibold text-white transition-all text-lg" style="background-color: var(--primary-500)">
+                                    Mobile Button
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Secondary Buttons -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Secondary Buttons</h3>
+                            <div class="flex flex-wrap gap-4">
+                                <button class="px-8 py-3 rounded-lg font-semibold transition-all border-2" style="border-color: var(--primary-500); color: var(--primary-600)">
+                                    Default
+                                </button>
+                                <button class="px-8 py-3 rounded-lg font-semibold transition-all border-2" style="border-color: var(--primary-500); color: var(--primary-600); background-color: var(--primary-50)">
+                                    Hover
+                                </button>
+                                <button class="px-8 py-3 rounded-lg font-semibold transition-all border-2" style="border-color: var(--primary-500); color: var(--primary-600); box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2)">
+                                    Focus
+                                </button>
+                                <button class="px-8 py-3 rounded-lg font-semibold opacity-50 cursor-not-allowed border-2 border-gray-300 text-gray-400" disabled>
+                                    Disabled
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tertiary Buttons -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Tertiary Buttons</h3>
+                            <div class="flex flex-wrap gap-4">
+                                <button class="px-8 py-3 rounded-lg font-semibold transition-all" style="color: var(--primary-600)">
+                                    Default
+                                </button>
+                                <button class="px-8 py-3 rounded-lg font-semibold transition-all underline" style="color: var(--primary-700)">
+                                    Hover
+                                </button>
+                                <button class="px-8 py-3 rounded-lg font-semibold transition-all" style="color: var(--primary-600); box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2)">
+                                    Focus
+                                </button>
+                                <button class="px-8 py-3 rounded-lg font-semibold opacity-50 cursor-not-allowed text-gray-400" disabled>
+                                    Disabled
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Button Sizes -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Button Sizes</h3>
+                            <div class="flex flex-wrap items-center gap-4">
+                                <button class="px-4 py-2 rounded-md font-semibold text-white text-sm" style="background-color: var(--primary-500)">
+                                    Small
+                                </button>
+                                <button class="px-6 py-2.5 rounded-lg font-semibold text-white" style="background-color: var(--primary-500)">
+                                    Medium
+                                </button>
+                                <button class="px-8 py-3 rounded-lg font-semibold text-white text-lg" style="background-color: var(--primary-500)">
+                                    Large
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Icon Buttons -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Icon Buttons</h3>
+                            <div class="flex flex-wrap gap-4">
+                                <button class="p-3 rounded-lg transition-all" style="background-color: var(--primary-500)">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    </svg>
+                                </button>
+                                <button class="p-3 rounded-lg transition-all border-2" style="border-color: var(--primary-500)">
+                                    <svg class="w-5 h-5" style="color: var(--primary-600)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                    </svg>
+                                </button>
+                                <button class="p-3 rounded-lg transition-all hover:bg-gray-100">
+                                    <svg class="w-5 h-5" style="color: var(--neutral-600)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Form Elements Section -->
+            <section id="forms" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Form Elements</h2>
+                
+                <div class="bg-white rounded-xl p-8 border border-gray-200">
+                    <div class="space-y-8">
+                        <!-- Text Inputs -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Text Inputs</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--neutral-700)">Default Input</label>
+                                    <input type="text" placeholder="Enter text..." class="w-full px-4 py-3 rounded-lg border transition-all" style="border-color: var(--neutral-300)">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--neutral-700)">Focus State</label>
+                                    <input type="text" placeholder="Focused input..." class="w-full px-4 py-3 rounded-lg border-2 transition-all" style="border-color: var(--primary-500); box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1)">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--neutral-700)">Error State</label>
+                                    <input type="text" placeholder="Error input..." class="w-full px-4 py-3 rounded-lg border-2 transition-all" style="border-color: var(--error)">
+                                    <p class="text-sm mt-1" style="color: var(--error)">This field is required</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--neutral-700)">Disabled State</label>
+                                    <input type="text" placeholder="Disabled input..." class="w-full px-4 py-3 rounded-lg border bg-gray-50 cursor-not-allowed opacity-60" style="border-color: var(--neutral-300)" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Textarea -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Textarea</h3>
+                            <div class="max-w-2xl">
+                                <label class="block text-sm font-medium mb-2" style="color: var(--neutral-700)">Message</label>
+                                <textarea placeholder="Type your message..." rows="4" class="w-full px-4 py-3 rounded-lg border transition-all resize-none" style="border-color: var(--neutral-300)"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Select -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Select Dropdown</h3>
+                            <div class="max-w-md">
+                                <label class="block text-sm font-medium mb-2" style="color: var(--neutral-700)">Choose Option</label>
+                                <select class="w-full px-4 py-3 rounded-lg border transition-all appearance-none bg-white" style="border-color: var(--neutral-300)">
+                                    <option>Select an option...</option>
+                                    <option>Option 1</option>
+                                    <option>Option 2</option>
+                                    <option>Option 3</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Checkboxes -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Checkboxes</h3>
+                            <div class="space-y-3">
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="w-5 h-5 rounded" style="accent-color: var(--primary-500)">
+                                    <span class="ml-3">Unchecked checkbox</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="w-5 h-5 rounded" style="accent-color: var(--primary-500)" checked>
+                                    <span class="ml-3">Checked checkbox</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="w-5 h-5 rounded opacity-50" disabled>
+                                    <span class="ml-3 text-gray-400">Disabled checkbox</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Radio Buttons -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Radio Buttons</h3>
+                            <div class="space-y-3">
+                                <label class="flex items-center">
+                                    <input type="radio" name="radio-group" class="w-5 h-5" style="accent-color: var(--primary-500)">
+                                    <span class="ml-3">Option 1</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="radio-group" class="w-5 h-5" style="accent-color: var(--primary-500)" checked>
+                                    <span class="ml-3">Option 2 (Selected)</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="radio-group" class="w-5 h-5 opacity-50" disabled>
+                                    <span class="ml-3 text-gray-400">Option 3 (Disabled)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Toggle Switch -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Toggle Switch</h3>
+                            <div class="space-y-3">
+                                <label class="flex items-center">
+                                    <div class="switch">
+                                        <input type="checkbox">
+                                        <span class="switch-slider"></span>
+                                    </div>
+                                    <span class="ml-3">Off state</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <div class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="switch-slider"></span>
+                                    </div>
+                                    <span class="ml-3">On state</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cards Section -->
+            <section id="cards" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Cards</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Basic Card -->
+                    <div class="bg-white rounded-xl p-6 border border-gray-200">
+                        <h3 class="text-xl font-semibold mb-2">Basic Card</h3>
+                        <p style="color: var(--neutral-600)">Simple card with border and padding for content organization.</p>
+                    </div>
+
+                    <!-- Glass Card -->
+                    <div class="glass-card rounded-xl p-6">
+                        <h3 class="text-xl font-semibold mb-2">Glass Card</h3>
+                        <p style="color: var(--neutral-600)">Glassmorphism effect with backdrop blur and transparency.</p>
+                    </div>
+
+                    <!-- Feature Card -->
+                    <div class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-all">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background-color: var(--primary-500)">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">Feature Card</h3>
+                        <p style="color: var(--neutral-600)">Card with icon and hover effect for feature showcases.</p>
+                    </div>
+
+                    <!-- Pricing Card -->
+                    <div class="bg-white rounded-xl border-2 overflow-hidden" style="border-color: var(--primary-500)">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-2">Pro Plan</h3>
+                            <div class="text-3xl font-bold mb-4" style="color: var(--primary-600)">$11.11<span class="text-base font-normal text-gray-500">/month</span></div>
+                            <ul class="space-y-2 mb-6">
+                                <li class="flex items-center">
+                                    <svg class="w-5 h-5 mr-2" style="color: var(--primary-500)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    Unlimited projects
+                                </li>
+                                <li class="flex items-center">
+                                    <svg class="w-5 h-5 mr-2" style="color: var(--primary-500)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    Priority support
+                                </li>
+                            </ul>
+                            <button class="w-full py-3 rounded-lg font-semibold text-white" style="background-color: var(--primary-500)">
+                                Get Started
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Stat Card -->
+                    <div class="bg-white rounded-xl p-6 border border-gray-200">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background-color: var(--primary-100)">
+                                <svg class="w-6 h-6" style="color: var(--primary-600)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                                </svg>
+                            </div>
+                            <span class="text-sm font-medium" style="color: var(--primary-600)">+12%</span>
+                        </div>
+                        <h3 class="text-2xl font-bold" style="color: var(--neutral-900)">24</h3>
+                        <p class="text-sm" style="color: var(--neutral-600)">Active Projects</p>
+                    </div>
+
+                    <!-- Interactive Card -->
+                    <div class="bg-white rounded-xl p-6 border border-gray-200 cursor-pointer hover:border-green-500 hover:shadow-lg transition-all group">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">Interactive Card</h3>
+                            <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" style="color: var(--primary-600)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                        <p style="color: var(--neutral-600)">Hover to see interactive effects and state changes.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Navigation Section -->
+            <section id="navigation" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Navigation</h2>
+                
+                <!-- Desktop Navigation -->
+                <div class="bg-white rounded-xl p-8 border border-gray-200 mb-8" id="desktopNav">
+                    <h3 class="text-lg font-semibold mb-6">Desktop Navigation</h3>
+                    <nav class="bg-white border-b border-gray-200">
+                        <div class="px-6 py-4 flex items-center justify-between">
+                            <div class="flex items-center space-x-8">
+                                <h1 class="text-xl font-bold">Flexperts<span class="text-gradient">.dev</span></h1>
+                                <div class="flex space-x-6">
+                                    <a href="#" class="font-medium" style="color: var(--primary-600)">Dashboard</a>
+                                    <a href="#" class="font-medium" style="color: var(--neutral-600)" class="hover:text-green-600">Projects</a>
+                                    <a href="#" class="font-medium" style="color: var(--neutral-600)" class="hover:text-green-600">AI Tools</a>
+                                    <a href="#" class="font-medium" style="color: var(--neutral-600)" class="hover:text-green-600">Team</a>
+                                </div>
+                            </div>
+                            <button class="px-4 py-2 rounded-lg font-semibold text-white" style="background-color: var(--primary-500)">
+                                New Project
+                            </button>
+                        </div>
+                    </nav>
+                </div>
+
+                <!-- Mobile Navigation -->
+                <div class="bg-white rounded-xl p-8 border border-gray-200 hidden" id="mobileNav">
+                    <h3 class="text-lg font-semibold mb-6">Mobile Navigation</h3>
+                    <div class="bg-white border-b border-gray-200">
+                        <div class="px-4 py-4 flex items-center justify-between">
+                            <button class="p-2">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                                </svg>
+                            </button>
+                            <h1 class="text-lg font-bold">Flexperts<span class="text-gradient">.dev</span></h1>
+                            <button class="p-2">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar Navigation -->
+                <div class="bg-white rounded-xl p-8 border border-gray-200">
+                    <h3 class="text-lg font-semibold mb-6">Sidebar Navigation</h3>
+                    <div class="flex">
+                        <aside class="w-64 bg-white border-r border-gray-200 p-4">
+                            <nav class="space-y-1">
+                                <a href="#" class="flex items-center px-4 py-3 rounded-lg text-white" style="background-color: var(--primary-500)">
+                                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                    </svg>
+                                    Dashboard
+                                </a>
+                                <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-100" style="color: var(--neutral-600)">
+                                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                                    </svg>
+                                    Projects
+                                    <span class="ml-auto text-xs px-2 py-1 rounded-full" style="background-color: var(--neutral-200); color: var(--neutral-600)">12</span>
+                                </a>
+                            </nav>
+                        </aside>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mobile Navigation Section -->
+            <section id="mobile-nav" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Mobile Navigation Components</h2>
+                
+                <!-- Mobile Bottom Navigation -->
+                <div class="bg-white rounded-xl p-8 border border-gray-200 mb-8">
+                    <h3 class="text-lg font-semibold mb-6">Bottom Navigation Bar</h3>
+                    <div class="relative h-64 bg-gray-100 rounded-lg overflow-hidden">
+                        <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+                            <div class="flex items-center justify-around py-2">
+                                <button class="flex flex-col items-center justify-center py-2 px-3 min-w-0 flex-1">
+                                    <svg class="w-6 h-6 mb-1" style="color: var(--primary-600)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                    </svg>
+                                    <span class="text-xs" style="color: var(--primary-600)">Home</span>
+                                </button>
+                                <button class="flex flex-col items-center justify-center py-2 px-3 min-w-0 flex-1">
+                                    <svg class="w-6 h-6 mb-1" style="color: var(--neutral-600)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                                    </svg>
+                                    <span class="text-xs" style="color: var(--neutral-600)">Projects</span>
+                                </button>
+                                <button class="flex flex-col items-center justify-center py-2 px-3 min-w-0 flex-1 relative">
+                                    <div class="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                                        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                    </div>
+                                    <svg class="w-6 h-6 mb-1" style="color: var(--neutral-600)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                    <span class="text-xs" style="color: var(--neutral-600)">Tools</span>
+                                </button>
+                                <button class="flex flex-col items-center justify-center py-2 px-3 min-w-0 flex-1">
+                                    <div class="relative">
+                                        <svg class="w-6 h-6 mb-1" style="color: var(--neutral-600)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                        </svg>
+                                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                                    </div>
+                                    <span class="text-xs" style="color: var(--neutral-600)">Chat</span>
+                                </button>
+                                <button class="flex flex-col items-center justify-center py-2 px-3 min-w-0 flex-1">
+                                    <svg class="w-6 h-6 mb-1" style="color: var(--neutral-600)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    <span class="text-xs" style="color: var(--neutral-600)">Profile</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile App Bars -->
+                <div class="bg-white rounded-xl p-8 border border-gray-200 mb-8">
+                    <h3 class="text-lg font-semibold mb-6">Mobile App Bars</h3>
+                    
+                    <!-- Primary App Bar -->
+                    <div class="mb-6">
+                        <p class="text-sm text-gray-500 mb-3">Primary App Bar</p>
+                        <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                            <div class="px-4 py-3 flex items-center justify-between">
+                                <button class="p-2">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                                    </svg>
+                                </button>
+                                <h1 class="text-lg font-semibold">Dashboard</h1>
+                                <button class="p-2 relative">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                    </svg>
+                                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Secondary App Bar with Back -->
+                    <div class="mb-6">
+                        <p class="text-sm text-gray-500 mb-3">Secondary App Bar with Back Navigation</p>
+                        <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                            <div class="px-4 py-3 flex items-center">
+                                <button class="p-2 -ml-2">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                    </svg>
+                                </button>
+                                <h1 class="text-lg font-semibold ml-2">Project Settings</h1>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- App Bar with Search -->
+                    <div>
+                        <p class="text-sm text-gray-500 mb-3">App Bar with Search</p>
+                        <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                            <div class="px-4 py-3">
+                                <div class="flex items-center bg-gray-100 rounded-lg px-3 py-2">
+                                    <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                    <input type="text" placeholder="Search projects..." class="bg-transparent flex-1 outline-none text-sm">
+                                    <button class="ml-2 p-1">
+                                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab Bars Section -->
+            <section id="tabs" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Tab Bars</h2>
+                
+                <div class="bg-white rounded-xl p-8 border border-gray-200 mb-8">
+                    <!-- Desktop Tabs -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4">Desktop Tab Bar</h3>
+                        <div class="border-b border-gray-200">
+                            <nav class="-mb-px flex space-x-8">
+                                <a href="#" class="border-b-2 border-green-500 py-2 px-1 text-sm font-medium text-green-600">
+                                    Overview
+                                </a>
+                                <a href="#" class="border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                    Analytics
+                                </a>
+                                <a href="#" class="border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                    Reports
+                                </a>
+                                <a href="#" class="border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                    Notifications
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Tabs -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4">Mobile Tab Bar (Scrollable)</h3>
+                        <div class="border border-gray-200 rounded-lg overflow-hidden">
+                            <div class="overflow-x-auto">
+                                <nav class="flex whitespace-nowrap">
+                                    <button class="flex-1 min-w-max px-4 py-3 text-sm font-medium text-white bg-green-500">
+                                        Overview
+                                    </button>
+                                    <button class="flex-1 min-w-max px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50">
+                                        Analytics
+                                    </button>
+                                    <button class="flex-1 min-w-max px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50">
+                                        Reports
+                                    </button>
+                                    <button class="flex-1 min-w-max px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50">
+                                        Notifications
+                                    </button>
+                                    <button class="flex-1 min-w-max px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50">
+                                        Settings
+                                    </button>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Icon Tabs -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4">Icon Tab Bar</h3>
+                        <div class="bg-gray-100 p-1 rounded-lg inline-flex">
+                            <button class="flex items-center px-4 py-2 rounded-md bg-white shadow-sm text-green-600">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                                Stats
+                            </button>
+                            <button class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                Team
+                            </button>
+                            <button class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                                </svg>
+                                Files
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Segmented Control Style -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Segmented Control (iOS Style)</h3>
+                        <div class="bg-gray-200 p-1 rounded-lg inline-flex">
+                            <button class="px-6 py-2 rounded-md bg-white shadow-sm text-gray-900 font-medium">
+                                Day
+                            </button>
+                            <button class="px-6 py-2 text-gray-600 font-medium">
+                                Week
+                            </button>
+                            <button class="px-6 py-2 text-gray-600 font-medium">
+                                Month
+                            </button>
+                            <button class="px-6 py-2 text-gray-600 font-medium">
+                                Year
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Accordions Section -->
+            <section id="accordions" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Accordions</h2>
+                
+                <div class="bg-white rounded-xl p-8 border border-gray-200">
+                    <div class="max-w-2xl">
+                        <!-- Accordion Item 1 - Open -->
+                        <div class="border-b border-gray-200">
+                            <button class="w-full py-4 flex items-center justify-between text-left">
+                                <span class="text-lg font-medium">What is Flexperts?</span>
+                                <svg class="w-5 h-5 text-gray-500 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="pb-4">
+                                <p class="text-gray-600">Flexperts is a platform that empowers you to build web applications, AI tools, and digital products without traditional coding. We provide both self-service tools and done-for-you solutions.</p>
+                            </div>
+                        </div>
+
+                        <!-- Accordion Item 2 - Closed -->
+                        <div class="border-b border-gray-200">
+                            <button class="w-full py-4 flex items-center justify-between text-left">
+                                <span class="text-lg font-medium">How does the pricing work?</span>
+                                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Accordion Item 3 - Closed -->
+                        <div class="border-b border-gray-200">
+                            <button class="w-full py-4 flex items-center justify-between text-left">
+                                <span class="text-lg font-medium">Can I export my projects?</span>
+                                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Accordion Item 4 - With Icon -->
+                        <div class="border-b border-gray-200">
+                            <button class="w-full py-4 flex items-center justify-between text-left">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="text-lg font-medium">What AI features are included?</span>
+                                </div>
+                                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chips & Filters Section -->
+            <section id="chips" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Chips & Filters</h2>
+                
+                <div class="bg-white rounded-xl p-8 border border-gray-200">
+                    <div class="space-y-8">
+                        <!-- Choice Chips -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Choice Chips</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="chip selected">All Projects</button>
+                                <button class="chip">Active</button>
+                                <button class="chip">Archived</button>
+                                <button class="chip">Shared</button>
+                            </div>
+                        </div>
+
+                        <!-- Filter Chips with Icons -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Filter Chips with Icons</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="chip">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Recent
+                                </button>
+                                <button class="chip selected">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                                    </svg>
+                                    Starred
+                                </button>
+                                <button class="chip">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                    </svg>
+                                    Tagged
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Input Chips (Tags) -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Input Chips (Tags)</h3>
+                            <div class="border border-gray-300 rounded-lg p-3">
+                                <div class="flex flex-wrap gap-2 items-center">
+                                    <span class="chip selected">
+                                        Design
+                                        <button class="ml-2">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                    </span>
+                                    <span class="chip selected">
+                                        Development
+                                        <button class="ml-2">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                    </span>
+                                    <input type="text" placeholder="Add tag..." class="outline-none px-2 py-1 text-sm flex-1 min-w-[100px]">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Button Radios -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Button Radios (Instead of Traditional Radios)</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="text-sm text-gray-600 mb-2">Plan Selection</p>
+                                    <div class="grid grid-cols-3 gap-3">
+                                        <label class="button-radio">
+                                            <input type="radio" name="plan" value="free">
+                                            <span class="button-radio-label">Free</span>
+                                        </label>
+                                        <label class="button-radio">
+                                            <input type="radio" name="plan" value="pro" checked>
+                                            <span class="button-radio-label">Pro</span>
+                                        </label>
+                                        <label class="button-radio">
+                                            <input type="radio" name="plan" value="enterprise">
+                                            <span class="button-radio-label">Enterprise</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <p class="text-sm text-gray-600 mb-2">Duration</p>
+                                    <div class="flex gap-3">
+                                        <label class="button-radio flex-1">
+                                            <input type="radio" name="duration" value="monthly" checked>
+                                            <span class="button-radio-label">Monthly</span>
+                                        </label>
+                                        <label class="button-radio flex-1">
+                                            <input type="radio" name="duration" value="yearly">
+                                            <span class="button-radio-label">Yearly (Save 20%)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bottom Sheets Section -->
+            <section id="sheets" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Bottom Sheets & Action Sheets</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Bottom Sheet Example -->
+                    <div class="bg-white rounded-xl p-8 border border-gray-200">
+                        <h3 class="text-lg font-semibold mb-6">Bottom Sheet</h3>
+                        <div class="relative h-96 bg-gray-100 rounded-lg overflow-hidden">
+                            <div class="absolute inset-0 bg-gray-900 bg-opacity-50"></div>
+                            <div class="bottom-sheet show" style="position: absolute; max-height: 70%;">
+                                <div class="bottom-sheet-handle"></div>
+                                <div class="px-6 pb-6">
+                                    <h3 class="text-xl font-semibold mb-4">Select Option</h3>
+                                    <div class="space-y-2">
+                                        <button class="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">
+                                            <div class="flex items-center">
+                                                <svg class="w-5 h-5 mr-3" style="color: var(--neutral-600)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                                                </svg>
+                                                <div>
+                                                    <p class="font-medium">Move to folder</p>
+                                                    <p class="text-sm text-gray-500">Organize your projects</p>
+                                                </div>
+                                            </div>
+                                        </button>
+                                        <button class="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">
+                                            <div class="flex items-center">
+                                                <svg class="w-5 h-5 mr-3" style="color: var(--neutral-600)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m9.032 4.026a9.001 9.001 0 01-7.432 3.944 9 9 0 01-8.678-12C3.4 7.632 5.046 9 7 9c.482 0 .938-.114 1.342-.316m9.032 4.026A3 3 0 0118 12a3 3 0 00-.632-1.974m-.368 6A9.001 9.001 0 013.605 6.02 9 9 0 0112 3c1.994 0 3.84.64 5.342 1.732M12 3v9"></path>
+                                                </svg>
+                                                <div>
+                                                    <p class="font-medium">Share project</p>
+                                                    <p class="text-sm text-gray-500">Invite team members</p>
+                                                </div>
+                                            </div>
+                                        </button>
+                                        <button class="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100">
+                                            <div class="flex items-center">
+                                                <svg class="w-5 h-5 mr-3" style="color: var(--error)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                </svg>
+                                                <div>
+                                                    <p class="font-medium" style="color: var(--error)">Delete project</p>
+                                                    <p class="text-sm text-gray-500">This action cannot be undone</p>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Sheet Example -->
+                    <div class="bg-white rounded-xl p-8 border border-gray-200">
+                        <h3 class="text-lg font-semibold mb-6">Action Sheet</h3>
+                        <div class="relative h-96 bg-gray-100 rounded-lg overflow-hidden">
+                            <div class="absolute inset-0 bg-gray-900 bg-opacity-50"></div>
+                            <div class="bottom-sheet show" style="position: absolute;">
+                                <div class="p-4">
+                                    <div class="bg-white rounded-2xl overflow-hidden mb-2">
+                                        <button class="w-full px-4 py-4 text-center border-b border-gray-100 hover:bg-gray-50">
+                                            <span style="color: var(--primary-600)">Take Photo</span>
+                                        </button>
+                                        <button class="w-full px-4 py-4 text-center border-b border-gray-100 hover:bg-gray-50">
+                                            <span style="color: var(--primary-600)">Choose from Library</span>
+                                        </button>
+                                        <button class="w-full px-4 py-4 text-center hover:bg-gray-50">
+                                            <span style="color: var(--primary-600)">Remove Photo</span>
+                                        </button>
+                                    </div>
+                                    <button class="w-full bg-white rounded-2xl px-4 py-4 text-center font-medium">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Dropdown as Bottom Sheet -->
+                <div class="bg-white rounded-xl p-8 border border-gray-200 mt-8">
+                    <h3 class="text-lg font-semibold mb-6">Mobile Dropdown (Opens Bottom Sheet)</h3>
+                    <div class="max-w-sm">
+                        <label class="block text-sm font-medium mb-2" style="color: var(--neutral-700)">Select Project Type</label>
+                        <button class="w-full px-4 py-3 rounded-lg border text-left flex items-center justify-between" style="border-color: var(--neutral-300)">
+                            <span>Choose type...</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <p class="text-sm text-gray-500 mt-2">On mobile, this opens a bottom sheet instead of a dropdown</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chat Interface Section -->
+            <section id="chat" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Chat Interface</h2>
+                
+                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <!-- Chat Header -->
+                    <div class="px-4 py-3 border-b border-gray-200 flex items-center">
+                        <button class="p-2 -ml-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="ml-3 flex-1">
+                            <h3 class="font-semibold">AI Assistant</h3>
+                            <p class="text-sm" style="color: var(--primary-600)">Online</p>
+                        </div>
+                        <button class="p-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Chat Messages -->
+                    <div class="h-96 overflow-y-auto p-4 bg-gray-50">
+                        <div class="space-y-4">
+                            <!-- Received Message -->
+                            <div class="flex items-end gap-2">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-semibold" style="background-color: var(--primary-500)">AI</div>
+                                <div>
+                                    <div class="chat-bubble received px-4 py-2">
+                                        <p>Hello! How can I help you build today?</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1 ml-2">10:30 AM</p>
+                                </div>
+                            </div>
+
+                            <!-- Sent Message -->
+                            <div class="flex items-end gap-2 justify-end">
+                                <div>
+                                    <div class="chat-bubble sent px-4 py-2">
+                                        <p>I need help creating a new landing page</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1 mr-2 text-right">10:32 AM</p>
+                                </div>
+                            </div>
+
+                            <!-- Typing Indicator -->
+                            <div class="flex items-end gap-2">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-semibold" style="background-color: var(--primary-500)">AI</div>
+                                <div class="chat-bubble received px-4 py-3">
+                                    <div class="flex gap-1">
+                                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+                                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+                                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Message with Actions -->
+                            <div class="flex items-start gap-2">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-semibold" style="background-color: var(--primary-500)">AI</div>
+                                <div class="flex-1">
+                                    <div class="chat-bubble received px-4 py-2">
+                                        <p>I've created a landing page template for you. Would you like to:</p>
+                                    </div>
+                                    <div class="mt-2 space-y-2">
+                                        <button class="w-full text-left px-4 py-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50">
+                                            <span class="font-medium">View Template</span>
+                                        </button>
+                                        <button class="w-full text-left px-4 py-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50">
+                                            <span class="font-medium">Customize Design</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input -->
+                    <div class="p-4 border-t border-gray-200 bg-white">
+                        <div class="flex items-end gap-2">
+                            <button class="p-2">
+                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                            </button>
+                            <div class="flex-1 bg-gray-100 rounded-2xl px-4 py-2">
+                                <input type="text" placeholder="Type a message..." class="w-full bg-transparent outline-none">
+                            </div>
+                            <button class="p-2">
+                                <svg class="w-6 h-6" style="color: var(--primary-500)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Modal Dialogues Section -->
+            <section id="modals" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Modal Dialogues</h2>
+                
+                <div class="bg-white rounded-xl p-8 border border-gray-200">
+                    <div class="space-y-8">
+                        <!-- Desktop Modal -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Desktop Modal</h3>
+                            <div class="relative bg-black/10 rounded-lg p-8">
+                                <div class="max-w-md mx-auto bg-white rounded-xl shadow-xl p-6">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h3 class="text-xl font-semibold">Confirm Action</h3>
+                                        <button class="p-1">
+                                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <p class="text-gray-600 mb-6">Are you sure you want to delete this project? This action cannot be undone.</p>
+                                    <div class="flex gap-3 justify-end">
+                                        <button class="px-4 py-2 rounded-lg border border-gray-300 font-medium">Cancel</button>
+                                        <button class="px-4 py-2 rounded-lg bg-red-500 text-white font-medium">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Centered Modal with Form -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Modal with Form</h3>
+                            <div class="relative bg-black/10 rounded-lg p-8">
+                                <div class="max-w-lg mx-auto bg-white rounded-xl shadow-xl p-6">
+                                    <h3 class="text-xl font-semibold mb-4">Create New Project</h3>
+                                    <form class="space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-medium mb-2">Project Name</label>
+                                            <input type="text" class="w-full px-4 py-2 rounded-lg border border-gray-300" placeholder="My Awesome Project">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-2">Description</label>
+                                            <textarea class="w-full px-4 py-2 rounded-lg border border-gray-300" rows="3" placeholder="What's this project about?"></textarea>
+                                        </div>
+                                        <div class="flex gap-3 justify-end pt-4">
+                                            <button type="button" class="px-4 py-2 rounded-lg border border-gray-300 font-medium">Cancel</button>
+                                            <button type="submit" class="px-4 py-2 rounded-lg bg-green-500 text-white font-medium">Create</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Full Screen Modal -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Full Screen Modal (Mobile)</h3>
+                            <div class="border border-gray-200 rounded-lg overflow-hidden" style="height: 400px;">
+                                <div class="bg-white h-full flex flex-col">
+                                    <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+                                        <button class="p-2 -ml-2">
+                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                        <h3 class="font-semibold">Edit Profile</h3>
+                                        <button class="text-green-600 font-medium">Save</button>
+                                    </div>
+                                    <div class="flex-1 p-4 overflow-y-auto">
+                                        <p class="text-gray-600">Full screen modal content for mobile devices...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Floating Action Buttons Section -->
+            <section id="fab" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Floating Action Buttons</h2>
+                
+                <div class="bg-white rounded-xl p-8 border border-gray-200">
+                    <div class="space-y-8">
+                        <!-- Standard FAB -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Standard FAB</h3>
+                            <div class="relative h-32 bg-gray-50 rounded-lg">
+                                <button class="absolute bottom-4 right-4 w-14 h-14 bg-green-500 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-green-600 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Mini FAB -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Mini FAB</h3>
+                            <div class="relative h-32 bg-gray-50 rounded-lg">
+                                <button class="absolute bottom-4 right-4 w-10 h-10 bg-green-500 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-green-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Extended FAB -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Extended FAB</h3>
+                            <div class="relative h-32 bg-gray-50 rounded-lg">
+                                <button class="absolute bottom-4 right-4 px-4 py-3 bg-green-500 rounded-full shadow-lg flex items-center text-white hover:bg-green-600 transition-colors">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    </svg>
+                                    <span class="font-medium">Create</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Speed Dial FAB -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Speed Dial FAB (Expanded)</h3>
+                            <div class="relative h-48 bg-gray-50 rounded-lg">
+                                <div class="absolute bottom-4 right-4">
+                                    <!-- Mini actions -->
+                                    <div class="absolute bottom-16 right-0 space-y-2">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <span class="text-sm bg-gray-800 text-white px-2 py-1 rounded">Upload</span>
+                                            <button class="w-10 h-10 bg-gray-600 rounded-full shadow flex items-center justify-center text-white">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="flex items-center justify-end gap-2">
+                                            <span class="text-sm bg-gray-800 text-white px-2 py-1 rounded">Share</span>
+                                            <button class="w-10 h-10 bg-gray-600 rounded-full shadow flex items-center justify-center text-white">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m9.032 4.026a3 3 0 10-5.464 0m5.464 0a3 3 0 10-5.464 0M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- Main FAB -->
+                                    <button class="w-14 h-14 bg-green-500 rounded-full shadow-lg flex items-center justify-center text-white">
+                                        <svg class="w-6 h-6 transform rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sliders Section -->
+            <section id="sliders" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Sliders</h2>
+                
+                <div class="bg-white rounded-xl p-8 border border-gray-200">
+                    <div class="space-y-8">
+                        <!-- Basic Slider -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Basic Slider</h3>
+                            <div class="max-w-md">
+                                <label class="block text-sm font-medium mb-3">Volume</label>
+                                <input type="range" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-green-500" value="50">
+                            </div>
+                        </div>
+
+                        <!-- Slider with Values -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Slider with Values</h3>
+                            <div class="max-w-md">
+                                <div class="flex justify-between mb-2">
+                                    <label class="text-sm font-medium">Price Range</label>
+                                    <span class="text-sm text-gray-600">$50 - $200</span>
+                                </div>
+                                <input type="range" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-green-500" min="0" max="500" value="200">
+                                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                    <span>$0</span>
+                                    <span>$500</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Discrete Slider -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Discrete Slider (Steps)</h3>
+                            <div class="max-w-md">
+                                <label class="block text-sm font-medium mb-3">Quality</label>
+                                <input type="range" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-green-500" min="0" max="4" step="1" value="2">
+                                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                    <span>Low</span>
+                                    <span>Medium</span>
+                                    <span>High</span>
+                                    <span>Ultra</span>
+                                    <span>Max</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Custom Styled Slider -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Custom Styled Slider</h3>
+                            <div class="max-w-md">
+                                <label class="block text-sm font-medium mb-3">Progress</label>
+                                <div class="relative">
+                                    <div class="h-3 bg-gray-200 rounded-full">
+                                        <div class="h-3 bg-green-500 rounded-full" style="width: 65%;"></div>
+                                    </div>
+                                    <div class="absolute top-0 left-0 w-full h-3 flex items-center" style="padding-left: 65%;">
+                                        <div class="w-6 h-6 bg-white border-2 border-green-500 rounded-full shadow-md -ml-3"></div>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-2">
+                                    <span class="text-sm font-medium text-green-600">65%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Multi-Step Forms Section -->
+            <section id="multi-step" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Multi-Step Forms</h2>
+                
+                <div class="bg-white rounded-xl p-8 border border-gray-200">
+                    <!-- Progress Indicator -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4">Step Progress Indicators</h3>
+                        
+                        <!-- Numbered Steps -->
+                        <div class="mb-6">
+                            <p class="text-sm text-gray-500 mb-3">Numbered Steps</p>
+                            <div class="flex items-center justify-between max-w-lg">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-semibold">1</div>
+                                    <span class="ml-3 font-medium">Account</span>
+                                </div>
+                                <div class="flex-1 h-0.5 bg-green-500 mx-4"></div>
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-semibold">2</div>
+                                    <span class="ml-3 font-medium">Profile</span>
+                                </div>
+                                <div class="flex-1 h-0.5 bg-gray-300 mx-4"></div>
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-gray-500 font-semibold">3</div>
+                                    <span class="ml-3 text-gray-500">Complete</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dot Progress -->
+                        <div class="mb-6">
+                            <p class="text-sm text-gray-500 mb-3">Dot Progress</p>
+                            <div class="flex items-center justify-center space-x-2">
+                                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                <div class="w-8 h-2 bg-green-500 rounded-full"></div>
+                                <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
+                                <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div>
+                            <p class="text-sm text-gray-500 mb-3">Progress Bar</p>
+                            <div class="max-w-lg">
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="font-medium">Step 2 of 4</span>
+                                    <span class="text-gray-500">50% Complete</span>
+                                </div>
+                                <div class="h-2 bg-gray-200 rounded-full">
+                                    <div class="h-2 bg-green-500 rounded-full transition-all duration-300" style="width: 50%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Step Example -->
+                    <div class="border-t pt-8">
+                        <h3 class="text-lg font-semibold mb-4">Form Step Example</h3>
+                        <div class="max-w-lg">
+                            <h4 class="text-xl font-semibold mb-2">Tell us about yourself</h4>
+                            <p class="text-gray-600 mb-6">We need some basic information to create your account.</p>
+                            
+                            <form class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">First Name</label>
+                                    <input type="text" class="w-full px-4 py-2 rounded-lg border border-gray-300">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Last Name</label>
+                                    <input type="text" class="w-full px-4 py-2 rounded-lg border border-gray-300">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Email</label>
+                                    <input type="email" class="w-full px-4 py-2 rounded-lg border border-gray-300">
+                                </div>
+                                
+                                <div class="flex justify-between pt-6">
+                                    <button type="button" class="px-6 py-2 rounded-lg border border-gray-300 font-medium">Back</button>
+                                    <button type="button" class="px-6 py-2 rounded-lg bg-green-500 text-white font-medium">Continue</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Typeform Style Section -->
+            <section id="typeform" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Typeform Style Forms</h2>
+                
+                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <div class="bg-green-500 text-white p-8">
+                        <h3 class="text-2xl font-bold">One Question at a Time</h3>
+                        <p class="mt-2 opacity-90">Focused, conversational form experience</p>
+                    </div>
+                    
+                    <div class="p-8">
+                        <!-- Question 1 -->
+                        <div class="max-w-2xl mx-auto text-center py-12">
+                            <h2 class="text-3xl font-bold mb-8">What's your name? 👋</h2>
+                            <input type="text" class="text-2xl border-b-2 border-gray-300 pb-2 px-2 text-center focus:border-green-500 outline-none" placeholder="Type your answer here...">
+                            <div class="mt-12 flex justify-center gap-4">
+                                <button class="px-8 py-3 bg-green-500 text-white rounded-lg font-medium flex items-center">
+                                    OK 
+                                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-4">press Enter ↵</p>
+                        </div>
+
+                        <!-- Question Types -->
+                        <div class="border-t pt-8 mt-8">
+                            <h4 class="text-lg font-semibold mb-6">Question Types</h4>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <!-- Multiple Choice -->
+                                <div class="border border-gray-200 rounded-lg p-6">
+                                    <h5 class="font-medium mb-4">Multiple Choice</h5>
+                                    <p class="text-lg mb-4">How did you hear about us?</p>
+                                    <div class="space-y-2">
+                                        <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                                            <span class="text-lg mr-3">A</span>
+                                            <span>Social Media</span>
+                                        </label>
+                                        <label class="flex items-center p-3 border border-green-500 bg-green-50 rounded-lg cursor-pointer">
+                                            <span class="text-lg mr-3">B</span>
+                                            <span>Friend Referral</span>
+                                        </label>
+                                        <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                                            <span class="text-lg mr-3">C</span>
+                                            <span>Google Search</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Rating -->
+                                <div class="border border-gray-200 rounded-lg p-6">
+                                    <h5 class="font-medium mb-4">Rating Scale</h5>
+                                    <p class="text-lg mb-4">How satisfied are you?</p>
+                                    <div class="flex justify-center space-x-2">
+                                        <button class="w-12 h-12 rounded-lg border border-gray-300 hover:bg-gray-50">1</button>
+                                        <button class="w-12 h-12 rounded-lg border border-gray-300 hover:bg-gray-50">2</button>
+                                        <button class="w-12 h-12 rounded-lg border border-gray-300 hover:bg-gray-50">3</button>
+                                        <button class="w-12 h-12 rounded-lg bg-green-500 text-white border border-green-500">4</button>
+                                        <button class="w-12 h-12 rounded-lg border border-gray-300 hover:bg-gray-50">5</button>
+                                    </div>
+                                    <div class="flex justify-between text-sm text-gray-500 mt-2">
+                                        <span>Not at all</span>
+                                        <span>Very satisfied</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mobile Gestures Section -->
+            <section id="gestures" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Mobile Gestures</h2>
+                
+                <div class="bg-white rounded-xl p-8 border border-gray-200">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <!-- Swipe Actions -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Swipe Actions</h3>
+                            <div class="border border-gray-200 rounded-lg overflow-hidden">
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 w-20 bg-green-500 flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="absolute inset-y-0 right-0 w-20 bg-red-500 flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="relative bg-white p-4 ml-8 shadow-sm">
+                                        <h4 class="font-medium">Swipeable Item</h4>
+                                        <p class="text-sm text-gray-600">Swipe left to delete, right to archive</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-2">← Swipe to reveal actions →</p>
+                        </div>
+
+                        <!-- Pull to Refresh -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Pull to Refresh</h3>
+                            <div class="border border-gray-200 rounded-lg overflow-hidden h-48 relative">
+                                <div class="absolute top-0 left-0 right-0 flex justify-center pt-4">
+                                    <div class="w-8 h-8 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+                                </div>
+                                <div class="pt-16 px-4">
+                                    <div class="h-4 bg-gray-200 rounded mb-2"></div>
+                                    <div class="h-4 bg-gray-200 rounded mb-2 w-3/4"></div>
+                                    <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-2">↓ Pull down to refresh</p>
+                        </div>
+
+                        <!-- Long Press -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Long Press Menu</h3>
+                            <div class="relative">
+                                <div class="bg-gray-100 p-4 rounded-lg">
+                                    <p class="text-center text-gray-600">Press and hold</p>
+                                </div>
+                                <div class="absolute -top-2 -right-2 bg-white rounded-lg shadow-lg border border-gray-200 p-2">
+                                    <div class="space-y-1">
+                                        <button class="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded">Copy</button>
+                                        <button class="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded">Share</button>
+                                        <button class="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pinch to Zoom -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Pinch to Zoom</h3>
+                            <div class="border border-gray-200 rounded-lg overflow-hidden h-48 flex items-center justify-center bg-gray-50">
+                                <div class="text-center">
+                                    <div class="flex justify-center mb-2">
+                                        <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center">
+                                            <span class="text-2xl">🏞️</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-gray-600">Pinch to zoom image</p>
+                                    <div class="flex justify-center mt-2 space-x-4">
+                                        <span class="text-2xl">👆</span>
+                                        <span class="text-2xl">👆</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gesture Guidelines -->
+                    <div class="mt-8 p-6 bg-gray-50 rounded-lg">
+                        <h4 class="font-semibold mb-3">Mobile Gesture Guidelines</h4>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li>• <strong>Tap:</strong> Primary action, selection</li>
+                            <li>• <strong>Double Tap:</strong> Zoom, like, quick action</li>
+                            <li>• <strong>Long Press:</strong> Context menu, selection mode</li>
+                            <li>• <strong>Swipe:</strong> Navigation, dismiss, reveal actions</li>
+                            <li>• <strong>Pinch:</strong> Zoom in/out</li>
+                            <li>• <strong>Pull down:</strong> Refresh content</li>
+                            <li>• <strong>Edge swipe:</strong> Back navigation, menu reveal</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Layouts Section -->
+            <section id="layouts" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">Layout Examples</h2>
+                
+                <!-- Login Layout -->
+                <div class="bg-white rounded-xl p-8 border border-gray-200 mb-8">
+                    <h3 class="text-lg font-semibold mb-6">Login Layout</h3>
+                    <div class="max-w-md mx-auto">
+                        <div class="text-center mb-6">
+                            <h1 class="text-2xl font-bold mb-2">Welcome Back</h1>
+                            <p style="color: var(--neutral-600)">Sign in to your account</p>
+                        </div>
+                        <form class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2" style="color: var(--neutral-700)">Email</label>
+                                <input type="email" class="w-full px-4 py-3 rounded-lg border" style="border-color: var(--neutral-300)" placeholder="you@example.com">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2" style="color: var(--neutral-700)">Password</label>
+                                <input type="password" class="w-full px-4 py-3 rounded-lg border" style="border-color: var(--neutral-300)" placeholder="••••••••">
+                            </div>
+                            <button class="w-full py-3 rounded-lg font-semibold text-white" style="background-color: var(--primary-500)">
+                                Sign In
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Dashboard Grid -->
+                <div class="bg-white rounded-xl p-8 border border-gray-200">
+                    <h3 class="text-lg font-semibold mb-6">Dashboard Grid Layout</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-gray-100 rounded-lg p-4 text-center">
+                            <div class="h-20 flex items-center justify-center">
+                                <span class="text-gray-400">Stat Card</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-100 rounded-lg p-4 text-center">
+                            <div class="h-20 flex items-center justify-center">
+                                <span class="text-gray-400">Stat Card</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-100 rounded-lg p-4 text-center">
+                            <div class="h-20 flex items-center justify-center">
+                                <span class="text-gray-400">Stat Card</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-100 rounded-lg p-4 text-center">
+                            <div class="h-20 flex items-center justify-center">
+                                <span class="text-gray-400">Stat Card</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
+                        <div class="lg:col-span-2 bg-gray-100 rounded-lg p-4">
+                            <div class="h-40 flex items-center justify-center">
+                                <span class="text-gray-400">Main Content Area</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-100 rounded-lg p-4">
+                            <div class="h-40 flex items-center justify-center">
+                                <span class="text-gray-400">Sidebar</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Patterns Section -->
+            <section id="patterns" class="mb-16">
+                <h2 class="text-3xl font-bold mb-8">UI Patterns</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Empty State -->
+                    <div class="bg-white rounded-xl p-8 border border-gray-200 text-center">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background-color: var(--neutral-100)">
+                            <svg class="w-8 h-8" style="color: var(--neutral-400)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">No projects yet</h3>
+                        <p class="mb-6" style="color: var(--neutral-600)">Create your first project to get started</p>
+                        <button class="px-6 py-2 rounded-lg font-semibold text-white" style="background-color: var(--primary-500)">
+                            Create Project
+                        </button>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div class="bg-white rounded-xl p-8 border border-gray-200">
+                        <div class="space-y-4">
+                            <div class="h-4 rounded w-3/4" style="background-color: var(--neutral-200); animation: pulse 2s infinite"></div>
+                            <div class="h-4 rounded w-full" style="background-color: var(--neutral-200); animation: pulse 2s infinite"></div>
+                            <div class="h-4 rounded w-5/6" style="background-color: var(--neutral-200); animation: pulse 2s infinite"></div>
+                        </div>
+                    </div>
+
+                    <!-- Error State -->
+                    <div class="bg-red-50 rounded-xl p-8 border border-red-200">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <svg class="w-6 h-6" style="color: var(--error)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-semibold" style="color: var(--error)">Error loading data</h3>
+                                <p class="text-sm mt-1" style="color: #DC2626">Something went wrong. Please try again.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Success State -->
+                    <div class="bg-green-50 rounded-xl p-8 border border-green-200">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <svg class="w-6 h-6" style="color: var(--success)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-semibold" style="color: var(--success)">Success!</h3>
+                                <p class="text-sm mt-1" style="color: #059669">Your changes have been saved.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Responsive Design -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold mb-6">Responsive Design</h2>
+                
+                <!-- Typography Scales -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4">Typography Scales</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <h4 class="font-medium text-neutral-700 mb-2">Desktop Typography</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <p class="text-xs text-neutral-500">Display</p>
+                                    <p class="text-7xl font-bold">Aa</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-neutral-500">Heading 1</p>
+                                    <p class="text-5xl font-bold">Heading One</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-neutral-500">Heading 2</p>
+                                    <p class="text-4xl font-semibold">Heading Two</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-neutral-500">Body</p>
+                                    <p class="text-base">Body text at 16px with comfortable line height</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <h4 class="font-medium text-neutral-700 mb-2">Mobile Typography</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <p class="text-xs text-neutral-500">Display</p>
+                                    <p class="text-5xl font-bold">Aa</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-neutral-500">Heading 1</p>
+                                    <p class="text-3xl font-bold">Heading One</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-neutral-500">Heading 2</p>
+                                    <p class="text-2xl font-semibold">Heading Two</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-neutral-500">Body</p>
+                                    <p class="text-sm">Body text at 14px optimized for mobile</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Breakpoints -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4">Breakpoints</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-4">
+                            <span class="font-mono text-sm bg-neutral-100 px-2 py-1 rounded">sm</span>
+                            <span class="text-neutral-600">640px - Tablets</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="font-mono text-sm bg-neutral-100 px-2 py-1 rounded">md</span>
+                            <span class="text-neutral-600">768px - Small laptops</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="font-mono text-sm bg-neutral-100 px-2 py-1 rounded">lg</span>
+                            <span class="text-neutral-600">1024px - Desktops</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="font-mono text-sm bg-neutral-100 px-2 py-1 rounded">xl</span>
+                            <span class="text-neutral-600">1280px - Large desktops</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Touch Targets -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4">Touch Target Guidelines</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-medium text-neutral-700 mb-3">Minimum Touch Targets</h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-11 h-11 bg-primary-500 rounded flex items-center justify-center text-white">
+                                        44
+                                    </div>
+                                    <span>Primary actions: 44x44px minimum</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-9 h-9 bg-neutral-400 rounded flex items-center justify-center text-white text-sm">
+                                        36
+                                    </div>
+                                    <span>Secondary actions: 36x36px minimum</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-medium text-neutral-700 mb-3">Spacing Between Targets</h4>
+                            <div class="flex gap-2">
+                                <button class="w-11 h-11 bg-primary-500 rounded text-white">A</button>
+                                <button class="w-11 h-11 bg-primary-500 rounded text-white">B</button>
+                                <button class="w-11 h-11 bg-primary-500 rounded text-white">C</button>
+                            </div>
+                            <p class="text-sm text-neutral-600 mt-2">8px minimum spacing between interactive elements</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Responsive Component Examples -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Responsive Component Patterns</h3>
+                    <div class="space-y-6">
+                        <!-- Navigation -->
+                        <div class="glass-card p-4">
+                            <h4 class="font-medium mb-3">Navigation</h4>
+                            <p class="text-sm text-neutral-600 mb-3">Desktop: Horizontal nav bar | Mobile: Bottom navigation or hamburger menu</p>
+                            <div class="flex items-center gap-4 text-xs">
+                                <span class="bg-green-100 text-green-700 px-2 py-1 rounded">Desktop: sticky top</span>
+                                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded">Mobile: fixed bottom</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Forms -->
+                        <div class="glass-card p-4">
+                            <h4 class="font-medium mb-3">Forms</h4>
+                            <p class="text-sm text-neutral-600 mb-3">Desktop: Multi-column layouts | Mobile: Single column stack</p>
+                            <div class="flex items-center gap-4 text-xs">
+                                <span class="bg-green-100 text-green-700 px-2 py-1 rounded">Desktop: inline labels</span>
+                                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded">Mobile: stacked labels</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards -->
+                        <div class="glass-card p-4">
+                            <h4 class="font-medium mb-3">Cards & Grids</h4>
+                            <p class="text-sm text-neutral-600 mb-3">Desktop: Multi-column grid | Mobile: Single column or horizontal scroll</p>
+                            <div class="flex items-center gap-4 text-xs">
+                                <span class="bg-green-100 text-green-700 px-2 py-1 rounded">Desktop: 3-4 columns</span>
+                                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded">Mobile: 1-2 columns</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Toggle between desktop and mobile views
+        function toggleView(view) {
+            const desktopBtn = document.getElementById('desktopBtn');
+            const mobileBtn = document.getElementById('mobileBtn');
+            const desktopButtons = document.getElementById('desktopButtons');
+            const mobileButtons = document.getElementById('mobileButtons');
+            const desktopNav = document.getElementById('desktopNav');
+            const mobileNav = document.getElementById('mobileNav');
+            
+            if (view === 'mobile') {
+                // Mobile view
+                mobileBtn.classList.add('bg-green-100', 'text-green-700', 'font-medium');
+                mobileBtn.classList.remove('text-gray-600');
+                desktopBtn.classList.remove('bg-green-100', 'text-green-700', 'font-medium');
+                desktopBtn.classList.add('text-gray-600');
+                
+                // Show mobile components
+                mobileButtons.classList.remove('hidden');
+                mobileButtons.classList.add('flex', 'flex-col');
+                desktopButtons.classList.add('hidden');
+                
+                mobileNav.classList.remove('hidden');
+                desktopNav.classList.add('hidden');
+            } else {
+                // Desktop view
+                desktopBtn.classList.add('bg-green-100', 'text-green-700', 'font-medium');
+                desktopBtn.classList.remove('text-gray-600');
+                mobileBtn.classList.remove('bg-green-100', 'text-green-700', 'font-medium');
+                mobileBtn.classList.add('text-gray-600');
+                
+                // Show desktop components
+                desktopButtons.classList.remove('hidden');
+                mobileButtons.classList.add('hidden');
+                
+                desktopNav.classList.remove('hidden');
+                mobileNav.classList.add('hidden');
+            }
+        }
+
+        // Smooth scroll to sections
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    
+                    // Update active state
+                    document.querySelectorAll('nav a').forEach(link => {
+                        link.classList.remove('bg-green-50', 'text-green-700', 'font-medium');
+                        link.classList.add('hover:bg-gray-100');
+                    });
+                    this.classList.add('bg-green-50', 'text-green-700', 'font-medium');
+                    this.classList.remove('hover:bg-gray-100');
+                }
+            });
+        });
+
+        // Add pulse animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.5; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

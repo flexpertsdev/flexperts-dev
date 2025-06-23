@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexperts - Interactive Tool View</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+        }
+        .text-gradient {
+            background: linear-gradient(to right, #16A34A, #22C55E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Hide scrollbar but keep functionality */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Custom focus styles - all green */
+        input:focus, 
+        textarea:focus, 
+        select:focus,
+        button:focus {
+            outline: none;
+            border-color: #22C55E;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+        }
+        /* Chat bubbles */
+        .chat-bubble {
+            max-width: 85%;
+        }
+        .chat-bubble.sent {
+            background: #22C55E;
+            color: white;
+            border-radius: 18px 18px 4px 18px;
+        }
+        .chat-bubble.received {
+            background: #F3F4F6;
+            color: #111827;
+            border-radius: 18px 18px 18px 4px;
+        }
+        /* Flow node styles */
+        .flow-node {
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 16px;
+            min-width: 200px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+        .flow-node:hover {
+            border-color: #22C55E;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
+        }
+        .flow-node.selected {
+            border-color: #22C55E;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+        }
+        /* Connection line */
+        .connection-line {
+            stroke: #9CA3AF;
+            stroke-width: 2;
+            fill: none;
+        }
+        /* Grid background */
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(156, 163, 175, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(156, 163, 175, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        /* Tool panel */
+        .tool-panel {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 h-screen overflow-hidden">
+    <!-- Main Container -->
+    <div class="flex h-full">
+        <!-- AI Chat Sidebar (Contextual) -->
+        <aside class="w-96 bg-white border-r border-gray-200 flex flex-col">
+            <!-- Chat Header -->
+            <div class="p-4 border-b border-gray-200">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center">
+                        <button onclick="toggleViewMode()" class="p-2 hover:bg-gray-100 rounded-lg mr-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold mr-3">
+                                AI
+                            </div>
+                            <div>
+                                <h2 class="font-semibold">Ask Flexi - User Flow Assistant</h2>
+                                <p class="text-sm text-gray-500">Helping with: Authentication Flow</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Context Pills -->
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Visual Planning Mode</span>
+                    <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">ACME Corp Project</span>
+                    <span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">Auth Feature</span>
+                </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-4">
+                <!-- AI Message -->
+                <div class="flex items-start">
+                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm font-bold mr-3 flex-shrink-0">
+                        AI
+                    </div>
+                    <div class="chat-bubble received">
+                        <p class="p-3">
+                            I see you're working on the authentication flow. I've analyzed your current setup and have some suggestions:
+                        </p>
+                        <ul class="px-3 pb-3 space-y-2">
+                            <li class="flex items-start">
+                                <span class="text-green-600 mr-2">✓</span>
+                                <span>Your login flow looks good, but consider adding a "Remember Me" option</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-yellow-600 mr-2">!</span>
+                                <span>The password reset flow is missing email verification</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-600 mr-2">+</span>
+                                <span>You might want to add OAuth providers (Google, GitHub)</span>
+                            </li>
+                        </ul>
+                        <div class="px-3 pb-3">
+                            <button class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg mr-2">
+                                Add OAuth Flow
+                            </button>
+                            <button class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg">
+                                Show Examples
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Message -->
+                <div class="flex items-start justify-end">
+                    <div class="chat-bubble sent">
+                        <p class="p-3">
+                            Can you help me add a two-factor authentication step?
+                        </p>
+                    </div>
+                </div>
+
+                <!-- AI Response with Code -->
+                <div class="flex items-start">
+                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm font-bold mr-3 flex-shrink-0">
+                        AI
+                    </div>
+                    <div class="chat-bubble received">
+                        <p class="p-3">
+                            Absolutely! I'll help you add 2FA to your authentication flow. Here's how we can structure it:
+                        </p>
+                        <div class="px-3 pb-3">
+                            <div class="bg-gray-100 rounded-lg p-3 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-semibold text-sm">After Password Verification:</h4>
+                                </div>
+                                <ol class="text-sm space-y-1 ml-4">
+                                    <li>1. Check if user has 2FA enabled</li>
+                                    <li>2. If yes → Send to 2FA verification screen</li>
+                                    <li>3. Support SMS, Authenticator App, or Email</li>
+                                    <li>4. Verify code (with rate limiting)</li>
+                                    <li>5. Generate session token on success</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <p class="px-3 pb-3">
+                            I can add these nodes to your flow diagram. Would you like me to:
+                        </p>
+                        <div class="px-3 pb-3 flex flex-wrap gap-2">
+                            <button onclick="addTwoFactorNodes()" class="text-sm bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-lg">
+                                Add 2FA Nodes
+                            </button>
+                            <button class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg">
+                                Show Code Example
+                            </button>
+                            <button class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg">
+                                View Best Practices
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Context Card -->
+                <div class="bg-blue-50 rounded-lg p-3">
+                    <div class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div class="text-sm">
+                            <p class="font-medium text-blue-900">Related Context:</p>
+                            <p class="text-blue-700">Your API already has a <code class="bg-blue-100 px-1 rounded">POST /auth/2fa/send</code> endpoint ready. I can help you connect it.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="border-t border-gray-200 p-4">
+                <!-- Quick Actions -->
+                <div class="flex gap-2 mb-3">
+                    <button class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full">
+                        Generate API calls
+                    </button>
+                    <button class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full">
+                        Add error handling
+                    </button>
+                    <button class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full">
+                        Test flow
+                    </button>
+                </div>
+                
+                <div class="flex items-end space-x-2">
+                    <button class="p-2 hover:bg-gray-100 rounded-lg">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                        </svg>
+                    </button>
+                    <div class="flex-1">
+                        <textarea 
+                            placeholder="Ask about this flow..." 
+                            class="w-full px-4 py-2 bg-gray-100 rounded-lg resize-none focus:bg-white focus:ring-2 focus:ring-green-200 transition-all text-sm"
+                            rows="1"
+                        ></textarea>
+                    </div>
+                    <button class="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content - Visual Planning Tool -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <!-- Tool Header -->
+            <header class="bg-white border-b border-gray-200 px-6 py-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <h1 class="text-lg font-semibold mr-4">User Flow Designer</h1>
+                        <nav class="flex items-center text-sm text-gray-500">
+                            <span>ACME Corp</span>
+                            <svg class="w-4 h-4 mx-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                            <span>Authentication Feature</span>
+                            <svg class="w-4 h-4 mx-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                            <span class="text-gray-900 font-medium">Login Flow</span>
+                        </nav>
+                    </div>
+                    
+                    <!-- Tool Actions -->
+                    <div class="flex items-center gap-2">
+                        <button class="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                            </svg>
+                            Export
+                        </button>
+                        <button class="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                            Duplicate
+                        </button>
+                        <button class="px-3 py-1.5 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors">
+                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Tool Canvas -->
+            <div class="flex-1 relative overflow-hidden">
+                <!-- Canvas Background -->
+                <div class="absolute inset-0 grid-bg"></div>
+                
+                <!-- Flow Diagram -->
+                <div class="absolute inset-0 overflow-auto p-8">
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;">
+                        <!-- Connection Lines -->
+                        <path class="connection-line" d="M 200 150 Q 300 150 300 250"></path>
+                        <path class="connection-line" d="M 500 280 Q 600 280 600 250"></path>
+                        <path class="connection-line" d="M 500 320 Q 600 320 600 450"></path>
+                        <path class="connection-line" d="M 800 280 L 900 280"></path>
+                    </svg>
+                    
+                    <!-- Flow Nodes -->
+                    <div class="relative" style="z-index: 2;">
+                        <!-- Start Node -->
+                        <div class="flow-node absolute" style="left: 50px; top: 100px;">
+                            <div class="flex items-center mb-2">
+                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-2">
+                                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="font-semibold">Start</h3>
+                            </div>
+                            <p class="text-sm text-gray-600">User lands on login page</p>
+                        </div>
+
+                        <!-- Login Form Node -->
+                        <div class="flow-node selected absolute" style="left: 300px; top: 200px;">
+                            <div class="flex items-center mb-2">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-2">
+                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="font-semibold">Login Form</h3>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-2">Email & Password input</p>
+                            <div class="flex gap-2">
+                                <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">UI Component</span>
+                                <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Validation</span>
+                            </div>
+                        </div>
+
+                        <!-- Decision Node -->
+                        <div class="flow-node absolute" style="left: 600px; top: 200px; transform: rotate(45deg);">
+                            <div style="transform: rotate(-45deg);">
+                                <div class="flex items-center mb-2">
+                                    <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mr-2">
+                                        <span class="text-yellow-600 font-bold">?</span>
+                                    </div>
+                                    <h3 class="font-semibold">Valid?</h3>
+                                </div>
+                                <p class="text-sm text-gray-600">Check credentials</p>
+                            </div>
+                        </div>
+
+                        <!-- Success Path -->
+                        <div class="flow-node absolute" style="left: 900px; top: 250px;">
+                            <div class="flex items-center mb-2">
+                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-2">
+                                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="font-semibold">Dashboard</h3>
+                            </div>
+                            <p class="text-sm text-gray-600">Redirect to app</p>
+                        </div>
+
+                        <!-- Error Path -->
+                        <div class="flow-node absolute" style="left: 600px; top: 400px;">
+                            <div class="flex items-center mb-2">
+                                <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-2">
+                                    <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="font-semibold">Error</h3>
+                            </div>
+                            <p class="text-sm text-gray-600">Show error message</p>
+                        </div>
+
+                        <!-- Add Node Button -->
+                        <button onclick="showAddNodeMenu()" class="absolute bg-white border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-green-500 hover:bg-green-50 transition-all" style="left: 1100px; top: 250px;">
+                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Floating Tool Panel -->
+                <div class="absolute bottom-6 left-6 tool-panel rounded-xl shadow-lg border border-gray-200 p-4">
+                    <h3 class="font-medium text-sm mb-3">Flow Elements</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button class="p-3 bg-gray-50 hover:bg-gray-100 rounded-lg text-sm transition-colors">
+                            <svg class="w-5 h-5 mx-auto mb-1 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"></path>
+                            </svg>
+                            Action
+                        </button>
+                        <button class="p-3 bg-gray-50 hover:bg-gray-100 rounded-lg text-sm transition-colors">
+                            <svg class="w-5 h-5 mx-auto mb-1 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                            </svg>
+                            Decision
+                        </button>
+                        <button class="p-3 bg-gray-50 hover:bg-gray-100 rounded-lg text-sm transition-colors">
+                            <svg class="w-5 h-5 mx-auto mb-1 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Screen
+                        </button>
+                        <button class="p-3 bg-gray-50 hover:bg-gray-100 rounded-lg text-sm transition-colors">
+                            <svg class="w-5 h-5 mx-auto mb-1 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            API Call
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Properties Panel -->
+                <div class="absolute top-6 right-6 w-80 bg-white rounded-xl shadow-lg border border-gray-200">
+                    <div class="p-4 border-b border-gray-200">
+                        <h3 class="font-semibold">Node Properties</h3>
+                    </div>
+                    <div class="p-4 space-y-4">
+                        <div>
+                            <label class="text-sm font-medium text-gray-700 block mb-1">Name</label>
+                            <input type="text" value="Login Form" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-green-500">
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-700 block mb-1">Type</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-green-500">
+                                <option>UI Component</option>
+                                <option>API Call</option>
+                                <option>Decision</option>
+                                <option>Process</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-700 block mb-1">Description</label>
+                            <textarea rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200 focus:border-green-500">User enters email and password credentials</textarea>
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-700 block mb-1">Connected To</label>
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                    <span class="text-sm">Start</span>
+                                    <button class="text-red-500 hover:text-red-600">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                    <span class="text-sm">Valid? (Decision)</span>
+                                    <button class="text-red-500 hover:text-red-600">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Add two-factor nodes to the flow
+        function addTwoFactorNodes() {
+            // This would add new nodes to the flow diagram
+            alert('Adding 2FA verification nodes to the flow...');
+        }
+
+        // Toggle between different view modes
+        function toggleViewMode() {
+            // Switch between AI chat sidebar and regular navigation
+            alert('Switching view mode...');
+        }
+
+        // Show add node menu
+        function showAddNodeMenu() {
+            // Show options for adding different types of nodes
+            alert('Select node type to add...');
+        }
+
+        // Auto-resize textarea
+        document.querySelector('textarea').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    </script>
+</body>
+</html>

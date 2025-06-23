@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexperts - Interactive Mockup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+        }
+        .text-gradient {
+            background: linear-gradient(to right, #16A34A, #22C55E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glass-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .sidebar-transition {
+            transition: all 0.3s ease-in-out;
+        }
+        /* Mobile sidebar overlay */
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            display: none;
+        }
+        .sidebar-overlay.show {
+            display: block;
+        }
+        /* Hide scrollbar but keep functionality */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-neutral-50 to-green-50/20 min-h-screen">
+
+    <!-- Login/Signup Page -->
+    <div id="authPage" class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md">
+            <!-- Logo and Title -->
+            <div class="text-center mb-8">
+                <h1 className="text-4xl font-bold text-neutral-900 mb-2">
+                    Flexperts<span class="text-gradient">.dev</span>
+                </h1>
+                <p class="text-neutral-600">Turn Your Vision Into Reality</p>
+            </div>
+
+            <!-- Auth Card -->
+            <div class="glass-card rounded-2xl p-8 bg-white/80">
+                <!-- Tab Switcher -->
+                <div class="flex mb-8 bg-gray-100 rounded-lg p-1">
+                    <button id="loginTab" class="flex-1 py-2 px-4 rounded-md transition-all duration-200 bg-white text-green-600 font-semibold">
+                        Login
+                    </button>
+                    <button id="signupTab" class="flex-1 py-2 px-4 rounded-md transition-all duration-200 text-gray-600">
+                        Sign Up
+                    </button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all" placeholder="you@example.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all" placeholder="••••••••">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                            <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                        </label>
+                        <a href="#" class="text-sm text-green-600 hover:text-green-700">Forgot password?</a>
+                    </div>
+                    <button type="button" onclick="login()" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02]">
+                        Sign In
+                    </button>
+                    
+                    <div class="relative my-6">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <button type="button" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all">
+                            <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            Google
+                        </button>
+                        <button type="button" class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                            </svg>
+                            GitHub
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Signup Form (Hidden by default) -->
+                <form id="signupForm" class="space-y-6 hidden">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                            <input type="text" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all" placeholder="John">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                            <input type="text" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all" placeholder="Doe">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all" placeholder="you@example.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all" placeholder="••••••••">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                        <input type="password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all" placeholder="••••••••">
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                        <label class="ml-2 text-sm text-gray-600">
+                            I agree to the <a href="#" class="text-green-600 hover:text-green-700">Terms</a> and <a href="#" class="text-green-600 hover:text-green-700">Privacy Policy</a>
+                        </label>
+                    </div>
+                    <button type="button" onclick="login()" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02]">
+                        Create Account
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Layout (Hidden by default) -->
+    <div id="mainApp" class="hidden h-screen flex">
+        <!-- Sidebar Overlay for Mobile -->
+        <div id="sidebarOverlay" class="sidebar-overlay lg:hidden" onclick="toggleSidebar()"></div>
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed lg:relative w-80 h-full bg-white border-r border-gray-200 sidebar-transition z-50 -translate-x-full lg:translate-x-0">
+            <div class="flex flex-col h-full">
+                <!-- Sidebar Header -->
+                <div class="p-4 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-bold text-gray-900">Flexperts<span class="text-gradient">.dev</span></h2>
+                        <button onclick="toggleSidebar()" class="lg:hidden p-2 hover:bg-gray-100 rounded-lg">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search -->
+                <div class="p-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search projects..." class="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-lg focus:bg-white focus:ring-2 focus:ring-green-200 focus:outline-none transition-all">
+                        <svg class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="flex-1 overflow-y-auto hide-scrollbar">
+                    <div class="px-4 pb-4">
+                        <div class="space-y-1">
+                            <a href="#" onclick="showDashboard()" class="flex items-center px-4 py-3 text-gray-900 bg-green-50 rounded-lg group">
+                                <svg class="w-5 h-5 mr-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                </svg>
+                                Dashboard
+                            </a>
+                            <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg group">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                                </svg>
+                                Projects
+                                <span class="ml-auto bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded">12</span>
+                            </a>
+                            <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg group">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                                AI Tools
+                            </a>
+                            <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg group">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                Team
+                            </a>
+                            <a href="#" onclick="showSettings()" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg group">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                Settings
+                            </a>
+                        </div>
+
+                        <!-- Recent Projects -->
+                        <div class="mt-8">
+                            <h3 class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Recent Projects</h3>
+                            <div class="mt-3 space-y-1">
+                                <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">
+                                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                        <span class="text-xs font-bold text-green-600">AI</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">askFlexi Bot</p>
+                                        <p class="text-xs text-gray-400">Updated 2h ago</p>
+                                    </div>
+                                </a>
+                                <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">
+                                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                        <span class="text-xs font-bold text-blue-600">WB</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">Website Builder</p>
+                                        <p class="text-xs text-gray-400">Updated 5h ago</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- User Profile -->
+                <div class="p-4 border-t border-gray-200">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-semibold">
+                            JD
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <p class="text-sm font-medium text-gray-900">John Doe</p>
+                            <p class="text-xs text-gray-500">john@example.com</p>
+                        </div>
+                        <button onclick="logout()" class="p-2 hover:bg-gray-100 rounded-lg">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col">
+            <!-- Top Bar -->
+            <header class="bg-white border-b border-gray-200 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <button onclick="toggleSidebar()" class="lg:hidden p-2 hover:bg-gray-100 rounded-lg mr-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                        <h1 id="pageTitle" class="text-2xl font-bold text-gray-900">Dashboard</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="p-2 hover:bg-gray-100 rounded-lg relative">
+                            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                            </svg>
+                            <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                        </button>
+                        <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
+                            New Project
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="flex-1 overflow-y-auto bg-gray-50">
+                <!-- Dashboard Content -->
+                <div id="dashboardContent" class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <!-- Stat Cards -->
+                        <div class="bg-white rounded-xl p-6 border border-gray-200">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                                    </svg>
+                                </div>
+                                <span class="text-sm text-green-600 font-medium">+12%</span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-900">12</h3>
+                            <p class="text-sm text-gray-600">Active Projects</p>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-6 border border-gray-200">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                </div>
+                                <span class="text-sm text-blue-600 font-medium">Active</span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-900">5</h3>
+                            <p class="text-sm text-gray-600">AI Tools Used</p>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-6 border border-gray-200">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                </div>
+                                <span class="text-sm text-purple-600 font-medium">+3</span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-900">8</h3>
+                            <p class="text-sm text-gray-600">Team Members</p>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-6 border border-gray-200">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <span class="text-sm text-orange-600 font-medium">Pro</span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-900">$11.11</h3>
+                            <p class="text-sm text-gray-600">Monthly Plan</p>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="bg-white rounded-xl border border-gray-200">
+                        <div class="p-6 border-b border-gray-200">
+                            <h2 class="text-lg font-semibold text-gray-900">Recent Activity</h2>
+                        </div>
+                        <div class="divide-y divide-gray-200">
+                            <div class="p-6 flex items-center justify-between hover:bg-gray-50">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900">Project deployed successfully</p>
+                                        <p class="text-sm text-gray-500">askFlexi Bot is now live</p>
+                                    </div>
+                                </div>
+                                <span class="text-sm text-gray-400">2h ago</span>
+                            </div>
+                            <div class="p-6 flex items-center justify-between hover:bg-gray-50">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900">New team member added</p>
+                                        <p class="text-sm text-gray-500">Sarah Johnson joined the team</p>
+                                    </div>
+                                </div>
+                                <span class="text-sm text-gray-400">5h ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Content (Hidden by default) -->
+                <div id="settingsContent" class="p-6 hidden">
+                    <div class="max-w-4xl mx-auto">
+                        <!-- Settings Navigation -->
+                        <div class="bg-white rounded-xl border border-gray-200 mb-6">
+                            <div class="flex border-b border-gray-200">
+                                <button class="flex-1 px-6 py-4 text-left hover:bg-gray-50 border-b-2 border-green-500 text-green-600 font-medium">
+                                    Profile
+                                </button>
+                                <button class="flex-1 px-6 py-4 text-left hover:bg-gray-50 text-gray-600">
+                                    Account
+                                </button>
+                                <button class="flex-1 px-6 py-4 text-left hover:bg-gray-50 text-gray-600">
+                                    Billing
+                                </button>
+                                <button class="flex-1 px-6 py-4 text-left hover:bg-gray-50 text-gray-600">
+                                    Notifications
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Profile Settings -->
+                        <div class="bg-white rounded-xl border border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-6">Profile Settings</h3>
+                            
+                            <div class="space-y-6">
+                                <!-- Avatar Upload -->
+                                <div class="flex items-center space-x-6">
+                                    <div class="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                                        JD
+                                    </div>
+                                    <div>
+                                        <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
+                                            Upload Photo
+                                        </button>
+                                        <p class="text-sm text-gray-500 mt-2">JPG, PNG or GIF. Max size 2MB</p>
+                                    </div>
+                                </div>
+
+                                <!-- Form Fields -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                        <input type="text" value="John" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                        <input type="text" value="Doe" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all">
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                        <input type="email" value="john@example.com" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all">
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Bio</label>
+                                        <textarea rows="4" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all" placeholder="Tell us about yourself..."></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Save Button -->
+                                <div class="flex justify-end pt-4">
+                                    <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-lg font-semibold transition-colors mr-3">
+                                        Cancel
+                                    </button>
+                                    <button class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                                        Save Changes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Danger Zone -->
+                        <div class="bg-white rounded-xl border border-red-200 p-6 mt-6">
+                            <h3 class="text-lg font-semibold text-red-600 mb-4">Danger Zone</h3>
+                            <p class="text-gray-600 mb-4">Once you delete your account, there is no going back. Please be certain.</p>
+                            <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
+                                Delete Account
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching for login/signup
+        const loginTab = document.getElementById('loginTab');
+        const signupTab = document.getElementById('signupTab');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+
+        loginTab.addEventListener('click', () => {
+            loginTab.classList.add('bg-white', 'text-green-600', 'font-semibold');
+            loginTab.classList.remove('text-gray-600');
+            signupTab.classList.remove('bg-white', 'text-green-600', 'font-semibold');
+            signupTab.classList.add('text-gray-600');
+            loginForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+        });
+
+        signupTab.addEventListener('click', () => {
+            signupTab.classList.add('bg-white', 'text-green-600', 'font-semibold');
+            signupTab.classList.remove('text-gray-600');
+            loginTab.classList.remove('bg-white', 'text-green-600', 'font-semibold');
+            loginTab.classList.add('text-gray-600');
+            signupForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+        });
+
+        // Login function
+        function login() {
+            document.getElementById('authPage').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+        }
+
+        // Logout function
+        function logout() {
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('authPage').classList.remove('hidden');
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.add('show');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.remove('show');
+            }
+        }
+
+        // Show dashboard
+        function showDashboard() {
+            document.getElementById('dashboardContent').classList.remove('hidden');
+            document.getElementById('settingsContent').classList.add('hidden');
+            document.getElementById('pageTitle').textContent = 'Dashboard';
+            
+            // Update active nav state
+            updateActiveNav(event.target.closest('a'));
+        }
+
+        // Show settings
+        function showSettings() {
+            document.getElementById('settingsContent').classList.remove('hidden');
+            document.getElementById('dashboardContent').classList.add('hidden');
+            document.getElementById('pageTitle').textContent = 'Settings';
+            
+            // Update active nav state
+            updateActiveNav(event.target.closest('a'));
+        }
+
+        // Update active navigation
+        function updateActiveNav(clickedLink) {
+            // Remove active state from all links
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('bg-green-50', 'text-gray-900');
+                link.classList.add('text-gray-600');
+            });
+            
+            // Add active state to clicked link
+            clickedLink.classList.add('bg-green-50', 'text-gray-900');
+            clickedLink.classList.remove('text-gray-600');
+        }
+
+        // Handle window resize for responsive sidebar
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) { // lg breakpoint
+                document.getElementById('sidebar').classList.remove('-translate-x-full');
+                document.getElementById('sidebarOverlay').classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
