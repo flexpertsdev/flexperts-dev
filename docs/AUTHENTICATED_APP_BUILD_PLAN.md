@@ -1,320 +1,322 @@
-# Flexperts Authenticated App Build Plan
+# Flexperts Authenticated App - Comprehensive Build Plan
 
 ## Overview
-This document outlines the comprehensive build plan for the authenticated Flexperts application, focusing on a mobile-first approach with WhatsApp-inspired simplicity and AI-powered development workflows.
+This document outlines the comprehensive build plan for implementing the authenticated user experience across mobile and desktop platforms for Flexperts.dev. The application supports three distinct modes: **You Build** (AI-powered solo development), **We Build** (expert marketplace), and **Build Together** (team collaboration).
 
-## Core Architecture
+## 🎯 Core Features & Modes
 
-### 1. Layout System
-- **Mobile-First Responsive Design**
-  - Base: 375px (mobile)
-  - Breakpoints: 640px (sm), 768px (md), 1024px (lg), 1280px (xl)
-  - Dynamic viewport units (dvh) for proper mobile handling
-  - Safe area padding for notched devices
+### Mode System with Icons
+- **You Build** 🤖 - AI-powered individual development workspace
+- **We Build** 👤 - Expert marketplace for hiring professionals
+- **Build Together** 👥 - Team collaboration environment
 
-### 2. Navigation Structure
-- **Mobile**: Bottom navigation with 4 primary tabs
-- **Desktop**: Sidebar navigation with hub switcher
-- **Tablet**: Collapsible sidebar with gesture support
+## 📱 Mobile Architecture
 
-## Phase 1: Core Infrastructure (Week 1)
+### Core Mobile Components
 
-### 1.1 Authentication System
-- [ ] Implement secure authentication flow
-  - Email/password authentication
-  - Social login (Google, GitHub)
-  - 2FA support
-  - Session management
-  - Password reset flow
-- [ ] Protected route system
-- [ ] User profile management
+#### 1. **Bottom Navigation** (`/components/app/MobileBottomNav.tsx`)
+```tsx
+interface NavItem {
+  id: 'home' | 'spaces' | 'learn' | 'profile';
+  icon: React.ComponentType;
+  label: string;
+}
+```
+- Persistent bottom navigation with 4 main sections
+- Active state indicators
+- Safe area handling for iOS devices
 
-### 1.2 Hub Management System
-- [ ] Hub (Project) data model
-  ```typescript
-  interface Hub {
-    id: string;
-    name: string;
-    color: string;
-    initial: string;
-    type: 'personal' | 'team';
-    buildMode: 'you-build' | 'we-build' | 'build-together';
-    spaceCount: number;
-    lastActive: Date;
-  }
-  ```
-- [ ] Hub switching functionality
-- [ ] Hub creation flow
-- [ ] Hub settings management
+#### 2. **Hub Switcher Modal** (`/components/app/HubSwitcher.tsx`)
+```tsx
+interface Hub {
+  id: string;
+  name: string;
+  avatar: string;
+  memberCount: number;
+  activeSpaces: number;
+  mode: 'you-build' | 'we-build' | 'build-together';
+  isPersonal?: boolean;
+}
+```
+- Bottom sheet modal with drag-to-dismiss
+- Hub categorization (Current, Recent, All)
+- Integrated mode switcher
+- Create new project option
 
-### 1.3 Navigation Components
-- [ ] Mobile bottom navigation
-- [ ] Desktop sidebar
-- [ ] Hub switcher modal
-- [ ] Search functionality
-- [ ] Notification system
-
-## Phase 2: Space System (Week 2)
-
-### 2.1 Space Data Model
-```typescript
+#### 3. **Space List View** (`/pages/app/SpacesPage.tsx`)
+```tsx
 interface Space {
   id: string;
-  hubId: string;
   name: string;
-  description: string;
-  type: 'chat' | 'project' | 'documentation';
-  status: 'active' | 'completed' | 'archived';
-  lastMessage: {
-    content: string;
-    timestamp: Date;
-    preview: string;
-  };
+  lastMessage: string;
+  lastActivity: Date;
   messageCount: number;
-  attachments: Attachment[];
-  participants: Participant[];
-  createdAt: Date;
-  updatedAt: Date;
+  attachmentCount?: number;
+  status: 'active' | 'review' | 'completed' | 'archived';
+  isPinned?: boolean;
+  mode?: 'you-build' | 'we-build' | 'build-together';
+  collaborators?: User[];
+}
+```
+- Search and filter functionality
+- Pinned spaces section
+- Activity indicators
+- Swipe actions for quick operations
+
+#### 4. **Chat Interface** (`/pages/app/ChatSpacePage.tsx`)
+```tsx
+interface Message {
+  id: string;
+  content: string;
+  sender: 'user' | 'ai' | 'expert';
+  timestamp: Date;
+  attachments?: Attachment[];
+  status: 'sending' | 'sent' | 'delivered' | 'read';
+}
+```
+- Real-time messaging
+- File attachments support
+- Code snippet rendering
+- Quick action suggestions
+- Typing indicators
+
+## 🖥️ Desktop Architecture
+
+### Core Desktop Components
+
+#### 1. **Sidebar Navigation** (`/components/app/DesktopSidebar.tsx`)
+```tsx
+interface SidebarConfig {
+  isCollapsed: boolean;
+  width: number;
+  sections: {
+    hub: HubSection;
+    spaces: SpaceSection;
+    apps: AppSection;
+    user: UserSection;
+  };
+}
+```
+- Collapsible sidebar (80px collapsed, 320px expanded)
+- Hub selector with search
+- Space list with real-time updates
+- Integrated mode switcher
+- User profile section
+
+#### 2. **Split Panel Layout** (`/layouts/SplitViewLayout.tsx`)
+- Resizable panels
+- Responsive breakpoints
+- Focus mode support
+- Multi-pane layouts for different modes
+
+#### 3. **Mode-Specific Dashboards**
+- **You Build**: AI tools, code generation, visual planning
+- **We Build**: Expert profiles, project proposals, hiring workflow
+- **Build Together**: Team spaces, shared resources, real-time collaboration
+
+## 🔄 State Management
+
+### Context Providers
+
+#### 1. **AuthContext** (`/contexts/AuthContext.tsx`)
+```tsx
+interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  login: (credentials: LoginCredentials) => Promise<void>;
+  logout: () => Promise<void>;
+  refreshToken: () => Promise<void>;
 }
 ```
 
-### 2.2 Space Components
-- [ ] Space list view (WhatsApp-style)
-- [ ] Space creation modal
-- [ ] Space chat interface
-- [ ] Space settings/info panel
-- [ ] Space search and filtering
+#### 2. **HubContext** (`/contexts/HubContext.tsx`)
+```tsx
+interface HubState {
+  currentHub: Hub | null;
+  hubs: Hub[];
+  switchHub: (hubId: string) => Promise<void>;
+  createHub: (hub: Partial<Hub>) => Promise<Hub>;
+  updateHub: (hubId: string, updates: Partial<Hub>) => Promise<void>;
+}
+```
 
-### 2.3 Space Features
-- [ ] Real-time chat updates
-- [ ] Message persistence
+#### 3. **ModeContext** (`/contexts/ModeContext.tsx`)
+```tsx
+interface ModeState {
+  currentMode: AppMode;
+  switchMode: (mode: AppMode) => void;
+  modeFeatures: ModeFeatures;
+}
+```
+
+#### 4. **SpaceContext** (`/contexts/SpaceContext.tsx`)
+```tsx
+interface SpaceState {
+  currentSpace: Space | null;
+  spaces: Space[];
+  messages: Message[];
+  sendMessage: (content: string, attachments?: File[]) => Promise<void>;
+  switchSpace: (spaceId: string) => Promise<void>;
+}
+```
+
+## 🛣️ Routing Structure
+
+### Authenticated Routes (`/src/routes/authenticated.tsx`)
+```
+/app
+├── /home                    # Mode-specific dashboard
+├── /spaces                  # Space list view
+├── /spaces/:id             # Individual space/chat
+├── /learn                  # Learning resources
+├── /profile                # User profile
+├── /settings               # App settings
+└── /hub/:id               # Hub management
+```
+
+### Mode-Specific Routes
+```
+/app/you-build
+├── /assistant              # AI chat interface
+├── /projects               # Project management
+├── /tools                  # Development tools
+└── /playground             # Code playground
+
+/app/we-build
+├── /experts                # Expert directory
+├── /proposals              # Project proposals
+├── /contracts              # Active contracts
+└── /payments               # Payment management
+
+/app/build-together
+├── /team                   # Team management
+├── /shared                 # Shared resources
+├── /meetings               # Video/voice calls
+└── /activity               # Team activity feed
+```
+
+## 🎨 UI/UX Specifications
+
+### Design Tokens
+```css
+/* Colors */
+--primary: #22C55E;
+--primary-hover: #16A34A;
+--mode-you-build: #3B82F6;
+--mode-we-build: #8B5CF6;
+--mode-build-together: #F59E0B;
+
+/* Spacing */
+--space-xs: 0.25rem;
+--space-sm: 0.5rem;
+--space-md: 1rem;
+--space-lg: 1.5rem;
+--space-xl: 2rem;
+
+/* Typography */
+--font-primary: 'Quicksand', sans-serif;
+--text-xs: 0.75rem;
+--text-sm: 0.875rem;
+--text-base: 1rem;
+--text-lg: 1.125rem;
+--text-xl: 1.25rem;
+```
+
+### Responsive Breakpoints
+```tsx
+const breakpoints = {
+  mobile: '640px',
+  tablet: '768px',
+  laptop: '1024px',
+  desktop: '1280px'
+};
+```
+
+## 📦 Component Library Structure
+
+```
+/src/components
+├── /app                    # App-specific components
+│   ├── /mobile            # Mobile-only components
+│   ├── /desktop           # Desktop-only components
+│   └── /shared            # Shared components
+├── /chat                  # Chat-related components
+├── /spaces                # Space management components
+├── /hub                   # Hub-related components
+└── /mode                  # Mode-specific components
+    ├── /you-build
+    ├── /we-build
+    └── /build-together
+```
+
+## 🚀 Implementation Phases
+
+### Phase 1: Core Infrastructure (Week 1-2)
+- [ ] Authentication system
+- [ ] Context providers setup
+- [ ] Routing configuration
+- [ ] Base layouts (mobile/desktop)
+
+### Phase 2: Navigation & Mode Switching (Week 3)
+- [ ] Bottom navigation (mobile)
+- [ ] Sidebar navigation (desktop)
+- [ ] Hub switcher component
+- [ ] Mode switcher with icons
+
+### Phase 3: Space Management (Week 4)
+- [ ] Space list views
+- [ ] Space creation flow
+- [ ] Search and filtering
+- [ ] Space settings
+
+### Phase 4: Chat Interface (Week 5)
+- [ ] Message components
+- [ ] Real-time updates
 - [ ] File attachments
-- [ ] Code snippet support
-- [ ] Space archiving
-- [ ] Space pinning
+- [ ] Code snippet rendering
 
-## Phase 3: AI Chat Integration (Week 3)
+### Phase 5: Mode-Specific Features (Week 6-7)
+- [ ] You Build dashboard
+- [ ] We Build marketplace
+- [ ] Build Together collaboration
+- [ ] Mode-specific tools
 
-### 3.1 Flexi AI Assistant
-- [ ] Chat interface component
-- [ ] Message streaming
-- [ ] Context awareness (current space, project)
-- [ ] Code generation capabilities
-- [ ] File handling
-- [ ] Error handling and retry logic
+### Phase 6: Polish & Optimization (Week 8)
+- [ ] Performance optimization
+- [ ] Accessibility improvements
+- [ ] Error handling
+- [ ] Testing & QA
 
-### 3.2 AI Features
-- [ ] Code generation
-- [ ] Code explanation
-- [ ] Bug fixing assistance
-- [ ] Documentation generation
-- [ ] Test creation
-- [ ] Deployment assistance
+## 🔧 Technical Requirements
 
-### 3.3 AI Context System
-```typescript
-interface AIContext {
-  currentSpace: Space;
-  currentHub: Hub;
-  recentMessages: Message[];
-  projectFiles: File[];
-  userPreferences: UserPreferences;
-}
-```
+### Dependencies
+- React 18+
+- TypeScript
+- Tailwind CSS
+- Tanstack Query
+- React Router v6
+- Socket.io (real-time)
+- Zustand (state management)
 
-## Phase 4: Build Mode Features (Week 4)
+### API Integration
+- RESTful API for CRUD operations
+- WebSocket for real-time features
+- File upload/download support
+- Authentication tokens
 
-### 4.1 You Build Mode
-- [ ] Solo development workflow
-- [ ] AI pair programming
-- [ ] Code suggestions
-- [ ] Automated testing
-- [ ] Git integration
-- [ ] Deployment tools
+### Performance Targets
+- Initial load: < 3s
+- Route transitions: < 100ms
+- Chat message send: < 500ms
+- Search results: < 1s
 
-### 4.2 We Build Mode
-- [ ] Expert matching system
-- [ ] Collaborative spaces
-- [ ] Screen sharing integration
-- [ ] Code review tools
-- [ ] Progress tracking
-- [ ] Payment integration
+## 📝 Next Steps
 
-### 4.3 Build Together Mode
-- [ ] Team collaboration features
-- [ ] Real-time code collaboration
-- [ ] Task management
-- [ ] Team chat
-- [ ] File sharing
-- [ ] Version control
+1. **Review and approve build plan**
+2. **Set up development environment**
+3. **Create component library**
+4. **Implement Phase 1 infrastructure**
+5. **Begin iterative development**
 
-## Phase 5: Mobile-Specific Features (Week 5)
-
-### 5.1 Touch Optimizations
-- [ ] Swipe gestures
-  - Swipe to archive/delete spaces
-  - Swipe to reply to messages
-  - Pull to refresh
-- [ ] Long press actions
-- [ ] Haptic feedback
-- [ ] Touch-friendly sizing (44px minimum)
-
-### 5.2 Mobile UI Components
-- [ ] Bottom sheets
-- [ ] Action sheets
-- [ ] Floating action button
-- [ ] Mobile-optimized modals
-- [ ] Native-feeling transitions
-
-### 5.3 Offline Support
-- [ ] Message queue system
-- [ ] Offline space viewing
-- [ ] Sync on reconnection
-- [ ] Cache management
-
-## Phase 6: Desktop Enhancements (Week 6)
-
-### 6.1 Split View
-- [ ] Side-by-side code and chat
-- [ ] Resizable panels
-- [ ] Multi-space support
-- [ ] Keyboard shortcuts
-
-### 6.2 Advanced Features
-- [ ] Multi-tab support
-- [ ] Drag and drop files
-- [ ] Advanced search
-- [ ] Bulk operations
-
-## Technical Implementation
-
-### State Management
-```typescript
-// Global state structure
-interface AppState {
-  auth: AuthState;
-  hubs: HubState;
-  spaces: SpaceState;
-  chat: ChatState;
-  ui: UIState;
-}
-```
-
-### API Structure
-```typescript
-// API endpoints
-/api/auth/*
-/api/hubs/*
-/api/spaces/*
-/api/messages/*
-/api/ai/*
-/api/files/*
-```
-
-### Real-time Communication
-- WebSocket for real-time updates
-- Message queuing for reliability
-- Optimistic updates
-- Conflict resolution
-
-### Performance Optimizations
-- Lazy loading spaces
-- Virtual scrolling for long lists
-- Image optimization
-- Code splitting
-- Service worker for offline
-
-## Component Library
-
-### Core Components
-- `MobileLayout`
-- `DesktopLayout`
-- `SpaceList`
-- `ChatInterface`
-- `HubSwitcher`
-- `AIAssistant`
-- `CodeEditor`
-- `FileManager`
-
-### UI Components
-- `BottomNav`
-- `Sidebar`
-- `ChatBubble`
-- `SpaceCard`
-- `ActionSheet`
-- `Modal`
-- `Toast`
-- `LoadingStates`
-
-## Testing Strategy
-
-### Unit Tests
-- Component testing with React Testing Library
-- Hook testing
-- Utility function testing
-
-### Integration Tests
-- API integration tests
-- WebSocket communication tests
-- Authentication flow tests
-
-### E2E Tests
-- Critical user flows
-- Cross-browser testing
-- Mobile device testing
-
-## Deployment Strategy
-
-### Environment Setup
-- Development
-- Staging
-- Production
-
-### CI/CD Pipeline
-- Automated testing
-- Build optimization
-- Deployment automation
-- Rollback procedures
-
-## Success Metrics
-
-### Performance
-- First Contentful Paint < 1.5s
-- Time to Interactive < 3s
-- Lighthouse score > 90
-
-### User Experience
-- Touch target success rate > 95%
-- Message send latency < 100ms
-- Space load time < 500ms
-
-### Business
-- User engagement metrics
-- Space creation rate
-- AI interaction success rate
-- Build mode adoption
-
-## Timeline
-
-**Total Duration: 6 weeks**
-
-- Week 1: Core Infrastructure
-- Week 2: Space System
-- Week 3: AI Integration
-- Week 4: Build Modes
-- Week 5: Mobile Features
-- Week 6: Desktop & Polish
-
-## Risk Mitigation
-
-### Technical Risks
-- WebSocket reliability → Implement fallback polling
-- AI response time → Add loading states and queuing
-- Mobile performance → Progressive enhancement
-
-### UX Risks
-- Complex navigation → User testing and iteration
-- Feature discovery → Onboarding and tooltips
-- Mode confusion → Clear visual indicators
-
-This build plan provides a comprehensive roadmap for implementing the authenticated Flexperts application with a focus on mobile-first design, AI integration, and collaborative development features.
+This build plan provides a comprehensive roadmap for implementing the authenticated Flexperts application with full support for mobile and desktop experiences across all three modes.

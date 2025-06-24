@@ -254,10 +254,11 @@ export default {
   },
   
   plugins: [
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     require("tailwindcss-animate"),
     
     // PWA Custom Utilities
-    function({ addUtilities }: any) {
+    function({ addUtilities }: { addUtilities: (utilities: Record<string, Record<string, string>>) => void }) {
       addUtilities({
         '.safe-top': { paddingTop: 'env(safe-area-inset-top)' },
         '.safe-bottom': { paddingBottom: 'env(safe-area-inset-bottom)' },

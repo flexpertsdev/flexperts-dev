@@ -1,27 +1,119 @@
-import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, MoreVertical, Send, Paperclip } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Users, Pin, Archive, Settings } from 'lucide-react';
+import { ChatMessage, Message } from '@/components/chat/ChatMessage';
+import { ChatInput } from '@/components/chat/ChatInput';
+import { TypingIndicator } from '@/components/chat/TypingIndicator';
+import { useSpace } from '@/contexts/SpaceContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useMode } from '@/contexts/ModeContext';
+import { cn } from '@/lib/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export const ChatSpacePage = () => {
   const { spaceId } = useParams();
-  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { currentMode } = useMode();
+  const { 
+    spaces, 
+    messages, 
+    sendMessage, 
+    updateMessageStatus,
+    toggleSpacePin,
+    archiveSpace,
+    typingUsers
+  } = useSpace();
   
-  const messages = [
-    {
-      id: '1',
-      type: 'user' as const,
-      content: 'Can you help me build an authentication system?',
-      timestamp: '10:32 AM'
-    },
-    {
-      id: '2',
-      type: 'assistant' as const,
-      content: 'I\'d be happy to help you build an authentication system! Let me understand your requirements first:\n\n1. What type of authentication do you need?\n2. Which framework are you using?\n3. Do you need social login support?',
-      timestamp: '10:33 AM'
+  const [replyTo, setReplyTo] = useState<Message | undefined>();
+  const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  const currentSpace = spaces.find(s => s.id === spaceId);
+  const spaceMessages = useMemo(() => messages[spaceId || ''] || [], [messages, spaceId]);
+  const spaceTypingUsers = typingUsers[spaceId || ''] || [];
+  
+  useEffect(() => {
+    if (!currentSpace) {
+      navigate('/app/spaces');
     }
-  ];
-  
+  }, [currentSpace, navigate]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [spaceMessages]);
+
+  useEffect(() => {
+    // Mark messages as read when viewing the space
+    spaceMessages
+      .filter(m => m.status !== 'read' && m.senderId !== user?.id)
+      .forEach(m => {
+        updateMessageStatus(spaceId!, m.id, 'read');
+      });
+  }, [spaceMessages, spaceId, user?.id, updateMessageStatus]);
+
+  const handleSendMessage = async (content: string, attachments?: File[]) => {
+    if (!spaceId || !user) return;
+
+    const message: Message = {
+      id: Date.now().toString(),
+      content,
+      senderId: user.id,
+      senderName: user.name || 'You',
+      senderAvatar: user.avatar,
+      timestamp: new Date(),
+      status: 'sending',
+      type: 'text',
+      replyTo,
+      isAI: false,
+    };
+
+    sendMessage(spaceId, message);
+    setReplyTo(undefined);
+
+    // Simulate AI response if in You Build mode
+    if (currentMode === 'you-build' && currentSpace?.type === 'ai') {
+      setTimeout(() => {
+        const aiResponse: Message = {
+          id: (Date.now() + 1).toString(),
+          content: generateAIResponse(content),
+          senderId: 'ai-assistant',
+          senderName: 'Flexi AI',
+          timestamp: new Date(),
+          status: 'sent',
+          type: 'text',
+          isAI: true,
+        };
+        sendMessage(spaceId, aiResponse);
+      }, 1000 + Math.random() * 2000);
+    }
+  };
+
+  const handleTyping = (typing: boolean) => {
+    setIsTyping(typing);
+    // In real app, emit typing status via WebSocket
+  };
+
+  const handleDeleteMessage = (message: Message) => {
+    // Implement delete logic
+    console.log('Delete message:', message.id);
+  };
+
+  const handleEditMessage = (message: Message) => {
+    // Implement edit logic
+    console.log('Edit message:', message.id);
+  };
+
+  if (!currentSpace) return null;
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-gray-50">
       {/* Chat Header */}
@@ -32,59 +124,115 @@ export const ChatSpacePage = () => {
               <ArrowLeft className="w-6 h-6 text-gray-600" />
             </Link>
             <div>
-              <h1 className="font-semibold text-gray-900">Authentication System</h1>
-              <p className="text-xs text-gray-500">Space #{spaceId}</p>
+              <h1 className="font-semibold text-gray-900">{currentSpace.name}</h1>
+              <p className="text-xs text-gray-500">
+                {currentSpace.type === 'ai' && '🤖 AI Assistant • '}
+                {currentSpace.memberCount} members • {currentSpace.lastMessage?.timestamp 
+                  ? `Active ${new Date(currentSpace.lastMessage.timestamp).toLocaleDateString()}`
+                  : 'New space'
+                }
+              </p>
             </div>
           </div>
-          <Button variant="ghost" size="icon">
-            <MoreVertical className="w-5 h-5 text-gray-600" />
-          </Button>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <MoreVertical className="w-5 h-5 text-gray-600" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => toggleSpacePin(spaceId!)}>
+                <Pin className={cn(
+                  "w-4 h-4 mr-2",
+                  currentSpace.isPinned && "text-yellow-500"
+                )} />
+                {currentSpace.isPinned ? 'Unpin' : 'Pin'} Space
+              </DropdownMenuItem>
+              {currentSpace.type === 'team' && (
+                <DropdownMenuItem>
+                  <Users className="w-4 h-4 mr-2" />
+                  Manage Members
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem>
+                <Settings className="w-4 h-4 mr-2" />
+                Space Settings
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem 
+                className="text-red-600"
+                onClick={() => {
+                  archiveSpace(spaceId!);
+                  navigate('/app/spaces');
+                }}
+              >
+                <Archive className="w-4 h-4 mr-2" />
+                Archive Space
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
       
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
-            <div
-              className={`max-w-[80%] md:max-w-[60%] rounded-2xl px-4 py-3 ${
-                msg.type === 'user'
-                  ? 'bg-green-500 text-white'
-                  : 'bg-white border border-gray-200'
-              }`}
-            >
-              <p className="whitespace-pre-wrap">{msg.content}</p>
-              <p className={`text-xs mt-1 ${
-                msg.type === 'user' ? 'text-green-100' : 'text-gray-400'
-              }`}>
-                {msg.timestamp}
-              </p>
+      <ScrollArea className="flex-1">
+        <div className="p-4 space-y-1">
+          {spaceMessages.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500">No messages yet. Start a conversation!</p>
             </div>
-          </div>
-        ))}
-      </div>
+          ) : (
+            spaceMessages.map((message, index) => (
+              <ChatMessage
+                key={message.id}
+                message={message}
+                isCurrentUser={message.senderId === user?.id}
+                showAvatar={
+                  index === 0 || 
+                  spaceMessages[index - 1]?.senderId !== message.senderId
+                }
+                onReply={setReplyTo}
+                onEdit={message.senderId === user?.id ? handleEditMessage : undefined}
+                onDelete={message.senderId === user?.id ? handleDeleteMessage : undefined}
+              />
+            ))
+          )}
+          {spaceTypingUsers.length > 0 && (
+            <TypingIndicator users={spaceTypingUsers} />
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+      </ScrollArea>
       
       {/* Input */}
-      <div className="bg-white border-t border-gray-200 p-4">
-        <div className="flex items-center space-x-2">
-          <Button variant="ghost" size="icon">
-            <Paperclip className="w-5 h-5 text-gray-600" />
-          </Button>
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Type a message..."
-            className="flex-1 py-2 px-4 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-          <Button size="icon" className="bg-green-500 hover:bg-green-600">
-            <Send className="w-5 h-5" />
-          </Button>
-        </div>
-      </div>
+      <ChatInput
+        onSendMessage={handleSendMessage}
+        onTyping={handleTyping}
+        replyTo={replyTo}
+        onCancelReply={() => setReplyTo(undefined)}
+        placeholder={
+          currentSpace.type === 'ai' 
+            ? "Ask Flexi anything..."
+            : "Type a message..."
+        }
+      />
     </div>
   );
 };
+
+function generateAIResponse(input: string): string {
+  const responses = [
+    "I understand you're asking about {topic}. Let me help you with that...",
+    "That's a great question! Here's what I think...",
+    "Based on what you're describing, I'd recommend...",
+    "I can definitely help with that. Let's break it down...",
+    "Interesting! Here are my thoughts on {topic}..."
+  ];
+  
+  const response = responses[Math.floor(Math.random() * responses.length)];
+  const topic = input.split(' ').slice(0, 3).join(' ');
+  
+  return response.replace('{topic}', topic) + 
+    "\n\nThis is a mock response. In a real implementation, this would connect to an AI service.";
+}
