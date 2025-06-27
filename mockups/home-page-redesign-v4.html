@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexperts - Turn Your Vision Into Reality</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+        }
+        .text-gradient {
+            background: linear-gradient(to right, #16A34A, #22C55E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glass-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        /* Custom animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        /* Tab styles */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        /* Mockup styles */
+        .mockup-container {
+            background: #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .mockup-browser-bar {
+            background: #2a2a2a;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        /* Chat bubbles for embedded mockup */
+        .chat-bubble {
+            max-width: 80%;
+            margin-bottom: 1rem;
+        }
+        .chat-bubble.user {
+            margin-left: auto;
+            background: #22C55E;
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 18px 18px 4px 18px;
+        }
+        .chat-bubble.ai {
+            background: #F3F4F6;
+            color: #111827;
+            padding: 0.75rem 1rem;
+            border-radius: 18px 18px 18px 4px;
+        }
+        .chat-bubble.team {
+            background: #3B82F6;
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 18px 18px 18px 4px;
+        }
+        /* Feature card hover effects */
+        .feature-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .feature-card.active {
+            border: 2px solid #22C55E;
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        /* Pricing card highlight */
+        .pricing-card.popular {
+            position: relative;
+            border: 2px solid #22C55E;
+            transform: scale(1.05);
+        }
+        .pricing-card.popular::before {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #22C55E;
+            color: white;
+            padding: 4px 16px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        /* Path card styles */
+        .path-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .path-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .path-card.active {
+            border: 2px solid #22C55E;
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold">
+                        <span class="text-gradient">flexperts</span>
+                    </h1>
+                </div>
+                <div class="flex items-center gap-6">
+                    <a href="/about" class="text-gray-600 hover:text-gray-900">About</a>
+                    <a href="/contact" class="text-gray-600 hover:text-gray-900">Contact</a>
+                    <a href="/signin" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                        Sign In
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 1. Hero Section -->
+    <section class="py-20 px-4">
+        <div class="container mx-auto text-center">
+            <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 animate-fade-in-up">
+                Turn Your Vision Into Reality
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto animate-fade-in-up" style="animation-delay: 0.1s">
+                From idea to launch in days, not months. Experience the future of app development.
+            </p>
+            <button 
+                onclick="document.getElementById('interactive-demo').scrollIntoView({ behavior: 'smooth' })"
+                class="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all transform hover:scale-105 animate-fade-in-up"
+                style="animation-delay: 0.2s"
+            >
+                See Live Demo
+            </button>
+        </div>
+    </section>
+
+    <!-- 2. Interactive Demo Section -->
+    <section id="interactive-demo" class="py-20 px-4 bg-white">
+        <div class="container mx-auto">
+            <div class="max-w-5xl mx-auto">
+                <!-- Demo Container -->
+                <div class="mockup-container">
+                    <div class="mockup-browser-bar">
+                        <div class="browser-dot bg-red-500"></div>
+                        <div class="browser-dot bg-yellow-500"></div>
+                        <div class="browser-dot bg-green-500"></div>
+                        <div class="flex-1 text-center">
+                            <span class="text-gray-400 text-sm" id="demo-title">AI-Powered Development Assistant</span>
+                        </div>
+                    </div>
+                    <div class="p-6 bg-gray-50 h-[500px] overflow-y-auto" id="demo-content">
+                        <!-- Default Demo Content (You Build - AI Chat) -->
+                        <div class="space-y-4">
+                            <div class="chat-bubble ai">
+                                <div class="font-semibold mb-1">🤖 Flexi AI</div>
+                                <p>Hello! I'm your AI development assistant. What would you like to build today?</p>
+                            </div>
+                            <div class="chat-bubble user">
+                                <p>I need a task management app with categories and priority levels</p>
+                            </div>
+                            <div class="chat-bubble ai">
+                                <div class="font-semibold mb-1">🤖 Flexi AI</div>
+                                <p>Great choice! I'll help you create a task management app. Here's what I'll include:</p>
+                                <ul class="list-disc list-inside mt-2">
+                                    <li>Task categories with color coding</li>
+                                    <li>Priority levels (High, Medium, Low)</li>
+                                    <li>Due date tracking</li>
+                                    <li>Progress indicators</li>
+                                    <li>Team collaboration features</li>
+                                </ul>
+                                <div class="mt-4 bg-gray-100 rounded p-3">
+                                    <p class="text-sm text-gray-600 mb-2">Generating app structure...</p>
+                                    <div class="bg-gray-200 rounded-full h-2">
+                                        <div class="bg-green-500 h-2 rounded-full" style="width: 75%; transition: width 2s ease-out;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Choose Your Path Section -->
+    <section class="py-20 px-4">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center text-gray-900 mb-4">
+                Choose Your Path
+            </h2>
+            <p class="text-xl text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+                Three ways to build, each designed for different needs and skill levels
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <!-- Path 1: You Build -->
+                <div class="glass-card p-8 text-center path-card active" onclick="selectPath('you-build')" id="path-you-build">
+                    <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-3xl font-bold text-white">1</span>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-4">You Build</h3>
+                    <p class="text-gray-600 mb-6">
+                        AI-powered visual development. Build apps with drag-and-drop simplicity.
+                    </p>
+                    <ul class="text-left space-y-2 mb-6">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-sm">Visual flow designer</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-sm">AI assistance</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-sm">From $11.11/month</span>
+                        </li>
+                    </ul>
+                    <button class="w-full border border-green-500 text-green-600 hover:bg-green-50 px-4 py-2 rounded-lg font-medium transition-colors">
+                        Learn More
+                    </button>
+                </div>
+
+                <!-- Path 2: We Build -->
+                <div class="glass-card p-8 text-center path-card" onclick="selectPath('we-build')" id="path-we-build">
+                    <div class="w-20 h-20 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-3xl font-bold text-white">2</span>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-4">We Build</h3>
+                    <p class="text-gray-600 mb-6">
+                        Expert teams build for you. Fixed prices, guaranteed quality.
+                    </p>
+                    <ul class="text-left space-y-2 mb-6">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-sm">Dedicated team</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-sm">Fixed pricing</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-sm">From $500/project</span>
+                        </li>
+                    </ul>
+                    <button class="w-full border border-green-500 text-green-600 hover:bg-green-50 px-4 py-2 rounded-lg font-medium transition-colors">
+                        Learn More
+                    </button>
+                </div>
+
+                <!-- Path 3: Build Together -->
+                <div class="glass-card p-8 text-center path-card" onclick="selectPath('build-together')" id="path-build-together">
+                    <div class="w-20 h-20 bg-green-700 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-3xl font-bold text-white">3</span>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-4">Build Together</h3>
+                    <p class="text-gray-600 mb-6">
+                        Promote and earn. Turn your audience into recurring revenue.
+                    </p>
+                    <ul class="text-left space-y-2 mb-6">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-sm">50% commission</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-sm">Marketing tools</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-sm">Monthly payouts</span>
+                        </li>
+                    </ul>
+                    <button class="w-full border border-green-500 text-green-600 hover:bg-green-50 px-4 py-2 rounded-lg font-medium transition-colors">
+                        Learn More
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Features Section (Clickable to change demos) -->
+    <section class="py-20 px-4 bg-gray-50">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center text-gray-900 mb-4">
+                Explore Features
+            </h2>
+            <p class="text-xl text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+                Click any feature below to see it in action in the demo above
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <!-- Feature 1 -->
+                <div class="bg-white rounded-xl shadow-lg p-8 feature-card active" onclick="selectFeature('feature-1')" id="feature-1">
+                    <div class="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3" id="feature-1-title">AI Assistant</h3>
+                    <p class="text-gray-600" id="feature-1-desc">Get intelligent help building your app with our AI assistant</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="bg-white rounded-xl shadow-lg p-8 feature-card" onclick="selectFeature('feature-2')" id="feature-2">
+                    <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3" id="feature-2-title">Visual Builder</h3>
+                    <p class="text-gray-600" id="feature-2-desc">Design your app visually with drag and drop</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bg-white rounded-xl shadow-lg p-8 feature-card" onclick="selectFeature('feature-3')" id="feature-3">
+                    <div class="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3" id="feature-3-title">Quick Deploy</h3>
+                    <p class="text-gray-600" id="feature-3-desc">Deploy to production with one click</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Pricing Section -->
+    <section class="py-20 px-4">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center text-gray-900 mb-4">
+                Simple, Transparent Pricing
+            </h2>
+            <p class="text-xl text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+                Choose the plan that fits your needs
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <!-- You Build Pricing -->
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">You Build</h3>
+                    <p class="text-gray-600 mb-6">AI-powered development</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-gray-900">$11.11</span>
+                        <span class="text-gray-600">/month</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-gray-700">Unlimited AI assistance</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-gray-700">Visual app builder</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-gray-700">One-click deployment</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-gray-700">Export source code</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition-colors">
+                        Get Started
+                    </button>
+                </div>
+
+                <!-- We Build Pricing -->
+                <div class="bg-white rounded-xl shadow-lg p-8 pricing-card popular">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">We Build</h3>
+                    <p class="text-gray-600 mb-6">Expert team delivery</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-gray-900">$500</span>
+                        <span class="text-gray-600">+/project</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-gray-700">Dedicated expert team</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-gray-700">Fixed-price guarantee</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-gray-700">Quality assurance</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-gray-700">Ongoing support</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition-colors">
+                        Get Quote
+                    </button>
+                </div>
+
+                <!-- Build Together Pricing -->
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Build Together</h3>
+                    <p class="text-gray-600 mb-6">Partner program</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-gray-900">50%</span>
+                        <span class="text-gray-600"> commission</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-gray-700">Lifetime commissions</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-gray-700">Marketing materials</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-gray-700">AI content tools</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span class="text-gray-700">Monthly payouts</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition-colors">
+                        Join Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 px-4 bg-gray-50">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                Ready to Start Building?
+            </h2>
+            <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                Join thousands of builders, entrepreneurs, and creators bringing their ideas to life
+            </p>
+            <button class="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all transform hover:scale-105">
+                Start Free Trial
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">
+                        <span class="text-gradient">flexperts</span>
+                    </h3>
+                    <p class="text-sm">Build faster, smarter, together.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3">Product</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white">You Build</a></li>
+                        <li><a href="#" class="hover:text-white">We Build</a></li>
+                        <li><a href="#" class="hover:text-white">Build Together</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3">Company</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white">About</a></li>
+                        <li><a href="#" class="hover:text-white">Contact</a></li>
+                        <li><a href="#" class="hover:text-white">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3">Legal</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white">Privacy</a></li>
+                        <li><a href="#" class="hover:text-white">Terms</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
+                <p>&copy; 2025 Flexperts. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Current state
+        let currentPath = 'you-build';
+        let currentFeature = 'feature-1';
+
+        // Demo content for each path and feature combination
+        const demoContent = {
+            'you-build': {
+                'feature-1': {
+                    title: 'AI-Powered Development Assistant',
+                    content: `
+                        <div class="space-y-4">
+                            <div class="chat-bubble ai">
+                                <div class="font-semibold mb-1">🤖 Flexi AI</div>
+                                <p>Hello! I'm your AI development assistant. What would you like to build today?</p>
+                            </div>
+                            <div class="chat-bubble user">
+                                <p>I need a task management app with categories and priority levels</p>
+                            </div>
+                            <div class="chat-bubble ai">
+                                <div class="font-semibold mb-1">🤖 Flexi AI</div>
+                                <p>Great choice! I'll help you create a task management app. Here's what I'll include:</p>
+                                <ul class="list-disc list-inside mt-2">
+                                    <li>Task categories with color coding</li>
+                                    <li>Priority levels (High, Medium, Low)</li>
+                                    <li>Due date tracking</li>
+                                    <li>Progress indicators</li>
+                                    <li>Team collaboration features</li>
+                                </ul>
+                                <div class="mt-4 bg-gray-100 rounded p-3">
+                                    <p class="text-sm text-gray-600 mb-2">Generating app structure...</p>
+                                    <div class="bg-gray-200 rounded-full h-2">
+                                        <div class="bg-green-500 h-2 rounded-full" style="width: 75%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                },
+                'feature-2': {
+                    title: 'Visual Flow Designer',
+                    content: `
+                        <div class="bg-white rounded-lg p-6">
+                            <h4 class="text-lg font-semibold mb-4">Drag & Drop Interface Builder</h4>
+                            <div class="grid grid-cols-3 gap-4 mb-4">
+                                <div class="bg-blue-50 border-2 border-blue-200 rounded p-3 text-center cursor-move">
+                                    <div class="text-2xl mb-1">📝</div>
+                                    <p class="text-sm">Form Input</p>
+                                </div>
+                                <div class="bg-green-50 border-2 border-green-200 rounded p-3 text-center cursor-move">
+                                    <div class="text-2xl mb-1">🔘</div>
+                                    <p class="text-sm">Button</p>
+                                </div>
+                                <div class="bg-purple-50 border-2 border-purple-200 rounded p-3 text-center cursor-move">
+                                    <div class="text-2xl mb-1">📊</div>
+                                    <p class="text-sm">Chart</p>
+                                </div>
+                            </div>
+                            <div class="bg-gray-100 rounded p-4">
+                                <p class="text-sm text-gray-600 mb-2">Canvas</p>
+                                <div class="bg-white rounded p-4 min-h-[200px] border-2 border-dashed border-gray-300">
+                                    <div class="bg-blue-100 rounded p-3 mb-3">
+                                        <p class="font-medium">User Input Form</p>
+                                    </div>
+                                    <div class="bg-green-100 rounded p-3">
+                                        <p class="font-medium">Submit Button</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                },
+                'feature-3': {
+                    title: 'One-Click Deployment',
+                    content: `
+                        <div class="bg-white rounded-lg p-6">
+                            <h4 class="text-lg font-semibold mb-4">Deploy to Production</h4>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                                    <span class="font-medium">Build Status</span>
+                                    <span class="text-green-600">✓ Ready</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                                    <span class="font-medium">Tests</span>
+                                    <span class="text-green-600">✓ All Passing</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                                    <span class="font-medium">Environment</span>
+                                    <span class="text-blue-600">Production</span>
+                                </div>
+                                <button class="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition">
+                                    🚀 Deploy Now
+                                </button>
+                                <div class="mt-4 text-center text-sm text-gray-600">
+                                    Your app will be live at: <span class="text-blue-600 font-mono">app.flexperts.io/your-app</span>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                }
+            },
+            'we-build': {
+                'feature-1': {
+                    title: 'Project Dashboard',
+                    content: `
+                        <div class="bg-white rounded-lg p-6 shadow-lg">
+                            <h4 class="text-xl font-bold text-gray-900 mb-4">Your Project Dashboard</h4>
+                            <div class="space-y-4">
+                                <div class="border rounded-lg p-4">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h5 class="font-semibold">E-commerce Platform</h5>
+                                        <span class="text-green-600 text-sm font-medium">In Progress</span>
+                                    </div>
+                                    <p class="text-gray-600 text-sm mb-3">Building your custom online store with payment integration</p>
+                                    <div class="flex items-center gap-4 text-sm">
+                                        <span class="text-gray-500">Team: 3 experts</span>
+                                        <span class="text-gray-500">Timeline: 2 weeks</span>
+                                    </div>
+                                    <div class="mt-3">
+                                        <div class="bg-gray-200 rounded-full h-2">
+                                            <div class="bg-green-500 h-2 rounded-full" style="width: 65%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-blue-50 rounded-lg p-4">
+                                    <p class="text-sm text-blue-800">
+                                        <strong>Latest Update:</strong> Payment gateway integration completed. Testing checkout flow...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                },
+                'feature-2': {
+                    title: 'Expert Team Communication',
+                    content: `
+                        <div class="bg-white rounded-lg p-6">
+                            <h4 class="text-lg font-semibold mb-4">Team Chat</h4>
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm">JD</div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium">John (Lead Dev)</p>
+                                        <div class="bg-gray-100 rounded p-2 text-sm">Just finished the authentication module. Ready for review!</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm">SC</div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium">Sarah (Designer)</p>
+                                        <div class="bg-gray-100 rounded p-2 text-sm">Updated the checkout flow mockups based on your feedback</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm">You</div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium">You</p>
+                                        <div class="bg-blue-100 rounded p-2 text-sm">Great work team! Let's review this afternoon</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                },
+                'feature-3': {
+                    title: 'Fixed Pricing Calculator',
+                    content: `
+                        <div class="bg-white rounded-lg p-6">
+                            <h4 class="text-lg font-semibold mb-4">Project Cost Estimator</h4>
+                            <div class="space-y-3">
+                                <div class="p-3 bg-gray-50 rounded">
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-sm">Base Development</span>
+                                        <span class="font-medium">$500</span>
+                                    </div>
+                                </div>
+                                <div class="p-3 bg-gray-50 rounded">
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-sm">Payment Integration</span>
+                                        <span class="font-medium">$200</span>
+                                    </div>
+                                </div>
+                                <div class="p-3 bg-gray-50 rounded">
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-sm">Mobile Responsive</span>
+                                        <span class="font-medium">$150</span>
+                                    </div>
+                                </div>
+                                <div class="border-t pt-3 mt-3">
+                                    <div class="flex justify-between">
+                                        <span class="font-semibold">Total Fixed Price</span>
+                                        <span class="font-bold text-green-600 text-xl">$850</span>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-600 mt-2">✓ No hidden fees ✓ Revisions included ✓ 30-day support</p>
+                            </div>
+                        </div>
+                    `
+                }
+            },
+            'build-together': {
+                'feature-1': {
+                    title: 'Partner Earnings Dashboard',
+                    content: `
+                        <div class="bg-white rounded-lg p-6 shadow-lg">
+                            <h4 class="text-xl font-bold text-gray-900 mb-4">Partner Dashboard</h4>
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div class="bg-green-50 rounded-lg p-4">
+                                    <p class="text-sm text-gray-600">Monthly Earnings</p>
+                                    <p class="text-2xl font-bold text-green-600">$3,847</p>
+                                </div>
+                                <div class="bg-blue-50 rounded-lg p-4">
+                                    <p class="text-sm text-gray-600">Active Referrals</p>
+                                    <p class="text-2xl font-bold text-blue-600">47</p>
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between py-2 border-b">
+                                    <div>
+                                        <p class="font-medium">Sarah Chen</p>
+                                        <p class="text-sm text-gray-500">You Build - Pro Plan</p>
+                                    </div>
+                                    <span class="text-green-600 font-medium">+$47.50</span>
+                                </div>
+                                <div class="flex items-center justify-between py-2 border-b">
+                                    <div>
+                                        <p class="font-medium">Mike Johnson</p>
+                                        <p class="text-sm text-gray-500">We Build - Project</p>
+                                    </div>
+                                    <span class="text-green-600 font-medium">+$250.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                },
+                'feature-2': {
+                    title: 'AI Marketing Content Generator',
+                    content: `
+                        <div class="bg-white rounded-lg p-6">
+                            <h4 class="text-lg font-semibold mb-4">Generate Marketing Content</h4>
+                            <div class="space-y-4">
+                                <div class="p-3 bg-gray-50 rounded">
+                                    <p class="text-sm font-medium mb-2">Content Type</p>
+                                    <select class="w-full p-2 border rounded text-sm">
+                                        <option>Twitter/X Thread</option>
+                                        <option>LinkedIn Post</option>
+                                        <option>Instagram Caption</option>
+                                        <option>Email Campaign</option>
+                                    </select>
+                                </div>
+                                <div class="p-3 bg-blue-50 rounded">
+                                    <p class="text-sm font-medium mb-2">Generated Content:</p>
+                                    <p class="text-sm text-gray-700">
+                                        "🚀 Just discovered @Flexperts - build apps 10x faster with AI! 
+                                        Whether you code or not, they have a path for you. 
+                                        I'm already earning $3k/month as a partner! 
+                                        Check it out: flexperts.dev/ref/yourname"
+                                    </p>
+                                </div>
+                                <button class="w-full bg-green-500 text-white py-2 rounded font-medium hover:bg-green-600 transition">
+                                    Copy & Schedule Post
+                                </button>
+                            </div>
+                        </div>
+                    `
+                },
+                'feature-3': {
+                    title: 'Performance Analytics',
+                    content: `
+                        <div class="bg-white rounded-lg p-6">
+                            <h4 class="text-lg font-semibold mb-4">Campaign Performance</h4>
+                            <div class="space-y-4">
+                                <div class="grid grid-cols-3 gap-3 text-center">
+                                    <div class="p-3 bg-gray-50 rounded">
+                                        <p class="text-2xl font-bold text-blue-600">1,247</p>
+                                        <p class="text-xs text-gray-600">Clicks</p>
+                                    </div>
+                                    <div class="p-3 bg-gray-50 rounded">
+                                        <p class="text-2xl font-bold text-green-600">47</p>
+                                        <p class="text-xs text-gray-600">Conversions</p>
+                                    </div>
+                                    <div class="p-3 bg-gray-50 rounded">
+                                        <p class="text-2xl font-bold text-purple-600">3.8%</p>
+                                        <p class="text-xs text-gray-600">Conv. Rate</p>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-100 rounded p-3">
+                                    <p class="text-sm font-medium mb-2">Top Performing Content</p>
+                                    <div class="text-sm text-gray-700">
+                                        <div class="flex justify-between py-1">
+                                            <span>"AI Builder Tutorial"</span>
+                                            <span class="text-green-600">+12 signups</span>
+                                        </div>
+                                        <div class="flex justify-between py-1">
+                                            <span>"No-Code Success Story"</span>
+                                            <span class="text-green-600">+8 signups</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                }
+            }
+        };
+
+        // Feature titles and descriptions for each path
+        const featureInfo = {
+            'you-build': {
+                'feature-1': { title: 'AI Assistant', desc: 'Get intelligent help building your app with our AI assistant' },
+                'feature-2': { title: 'Visual Builder', desc: 'Design your app visually with drag and drop' },
+                'feature-3': { title: 'Quick Deploy', desc: 'Deploy to production with one click' }
+            },
+            'we-build': {
+                'feature-1': { title: 'Project Dashboard', desc: 'Track your project progress in real-time' },
+                'feature-2': { title: 'Team Chat', desc: 'Communicate directly with your expert team' },
+                'feature-3': { title: 'Fixed Pricing', desc: 'Know your costs upfront, no surprises' }
+            },
+            'build-together': {
+                'feature-1': { title: 'Earnings Tracker', desc: 'Monitor your earnings and referrals' },
+                'feature-2': { title: 'Content Tools', desc: 'AI-powered marketing content generation' },
+                'feature-3': { title: 'Analytics', desc: 'Track performance and optimize' }
+            }
+        };
+
+        function selectPath(path) {
+            currentPath = path;
+            
+            // Update path card styles
+            document.querySelectorAll('.path-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.getElementById(`path-${path}`).classList.add('active');
+            
+            // Update feature titles and descriptions
+            Object.keys(featureInfo[path]).forEach(featureId => {
+                document.getElementById(`${featureId}-title`).textContent = featureInfo[path][featureId].title;
+                document.getElementById(`${featureId}-desc`).textContent = featureInfo[path][featureId].desc;
+            });
+            
+            // Update demo
+            updateDemo();
+        }
+
+        function selectFeature(feature) {
+            currentFeature = feature;
+            
+            // Update feature card styles
+            document.querySelectorAll('.feature-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.getElementById(feature).classList.add('active');
+            
+            // Update demo
+            updateDemo();
+            
+            // Scroll to demo
+            document.getElementById('interactive-demo').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function updateDemo() {
+            const demo = demoContent[currentPath][currentFeature];
+            document.getElementById('demo-title').textContent = demo.title;
+            document.getElementById('demo-content').innerHTML = demo.content;
+        }
+
+        // Tab switching function (for legacy compatibility)
+        function showTab(tabName) {
+            selectPath(tabName);
+        }
+    </script>
+</body>
+</html>

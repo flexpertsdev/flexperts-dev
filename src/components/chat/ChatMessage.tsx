@@ -141,7 +141,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
             "text-xs",
             message.isAI ? "bg-blue-500 text-white" : "bg-gray-200"
           )}>
-            {message.isAI ? '🤖' : message.senderName.charAt(0).toUpperCase()}
+            {message.isAI ? '🤖' : (message.senderName?.charAt(0) || 'U').toUpperCase()}
           </AvatarFallback>
         </Avatar>
       )}
@@ -158,7 +158,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
               ? "bg-green-500/20 border-green-400/30 text-green-100"
               : "bg-gray-50 border-gray-200"
           )}>
-            <div className="font-medium mb-1">{message.replyTo.senderName}</div>
+            <div className="font-medium mb-1">{message.replyTo.senderName || 'Unknown'}</div>
             <div className="opacity-75 line-clamp-2">{message.replyTo.content}</div>
           </div>
         )}
@@ -178,7 +178,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
               "text-xs font-medium mb-1",
               message.isAI ? "text-blue-600" : "text-gray-600"
             )}>
-              {message.senderName}
+              {message.senderName || 'Unknown'}
             </div>
           )}
 
