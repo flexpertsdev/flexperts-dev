@@ -118,13 +118,151 @@ export const useOnboarding = () => {
       timestamp: new Date()
     }]);
 
+    // Check if input is asking for help or clarification
+    const lowerInput = input.toLowerCase();
+    const isQuestion = lowerInput.includes('?') || 
+                      lowerInput.includes('what') || 
+                      lowerInput.includes('how') || 
+                      lowerInput.includes('why') ||
+                      lowerInput.includes('help') ||
+                      lowerInput.includes('explain');
+    
+    const wantsToGoBack = lowerInput.includes('back') || 
+                         lowerInput.includes('previous') || 
+                         lowerInput.includes('change') ||
+                         lowerInput.includes('edit');
+
+    // Handle going back
+    if (wantsToGoBack) {
+      addBotMessage("I understand you want to go back. What would you like to change?", [
+        "My name", 
+        "My email", 
+        "My company", 
+        "My role", 
+        "Continue with current info"
+      ]);
+      return;
+    }
+
+    // Handle specific edit requests
+    if (input === "My name") {
+      setCurrentStep('name');
+      addBotMessage("Sure! What's your name?");
+      return;
+    } else if (input === "My email") {
+      setCurrentStep('email');
+      addBotMessage("What's your email address?");
+      return;
+    } else if (input === "My company") {
+      setCurrentStep('company');
+      addBotMessage("What company or organization are you with?");
+      return;
+    } else if (input === "My role") {
+      setCurrentStep('role');
+      addBotMessage("What's your role?", onboardingFlow.role.options);
+      return;
+    } else if (input === "Continue with current info") {
+      // Continue with the current flow
+      const currentFlow = onboardingFlow[currentStep];
+      addBotMessage(currentFlow.message, currentFlow.options);
+      return;
+    }
+
+    if (isQuestion) {
+      // Provide contextual help based on current step
+      let helpMessage = "";
+      switch (currentStep) {
+        case 'welcome':
+          helpMessage = "I'm here to help you get started with Flexperts! We offer three ways to build: You Build (learn with AI), We Build (we build for you), and Build Together (collaborate with our devs). Ready to create your account?";
+          break;
+        case 'name':
+          helpMessage = "I just need your first name or what you'd like to be called. This helps us personalize your experience!";
+          break;
+        case 'email':
+          helpMessage = "Your email will be used to create your account and for important updates. We'll never spam you!";
+          break;
+        case 'company':
+          helpMessage = "This helps us understand your context. If you're working on personal projects, just type 'personal'. For startups or companies, share the name!";
+          break;
+        case 'role':
+          helpMessage = "Your role helps us tailor the experience. Are you technical? Business-focused? Design-oriented? This helps us recommend the right approach.";
+          break;
+        case 'project-type':
+          helpMessage = "Understanding what you want to build helps us match you with the right experts and resources. Don't worry if you're not sure yet!";
+          break;
+        case 'experience':
+          helpMessage = "Your technical experience level helps us recommend whether you should build yourself with AI guidance, have us build for you, or collaborate together.";
+          break;
+        case 'goals':
+          helpMessage = "Your goals help us understand what success looks like for you. Are you learning? Building a business? Looking for help?";
+          break;
+        case 'timeline':
+          helpMessage = "This helps us understand your urgency and plan accordingly. No pressure - we work with all timelines!";
+          break;
+        case 'budget':
+          helpMessage = "Budget helps us recommend the right service tier. We have options for every budget, including free learning resources!";
+          break;
+        default:
+          helpMessage = "I'm here to help! Feel free to ask any questions about Flexperts or the onboarding process.";
+      }
+      
+      addBotMessage(helpMessage);
+      
+      // Re-ask the current question after providing help
+      setTimeout(() => {
+        const currentFlow = onboardingFlow[currentStep];
+        addBotMessage(currentFlow.message, currentFlow.options);
+      }, 1500);
+      
+      return;
+    }
+
     // Update onboarding data based on current step
     const updatedData = { ...onboardingData };
+    
+    // Validate input based on step
+    const flow = onboardingFlow[currentStep];
+    let isValidInput = true;
+    
+    // Check if user selected a valid option when options are available
+    if (flow.options && !flow.options.includes(input) && flow.inputType === 'options') {
+      // Allow free-form input but suggest using options
+      addBotMessage(`I see you typed "${input}". You can either click one of the options above or continue with your answer. Would you like to proceed with "${input}"?`, ["Yes, use my answer", "No, let me choose from options"]);
+      
+      // Store the pending input temporarily
+      (updatedData as any).pendingInput = input;
+      (updatedData as any).pendingStep = currentStep;
+      setOnboardingData(updatedData);
+      return;
+    }
+    
+    // Handle pending confirmations
+    if ((onboardingData as any).pendingInput && input === "Yes, use my answer") {
+      input = (onboardingData as any).pendingInput;
+      setCurrentStep((onboardingData as any).pendingStep);
+      delete (updatedData as any).pendingInput;
+      delete (updatedData as any).pendingStep;
+    } else if ((onboardingData as any).pendingInput && input === "No, let me choose from options") {
+      delete (updatedData as any).pendingInput;
+      delete (updatedData as any).pendingStep;
+      setOnboardingData(updatedData);
+      
+      // Re-show the current step's options
+      const currentFlow = onboardingFlow[currentStep];
+      addBotMessage("No problem! Here are the options again:", currentFlow.options);
+      return;
+    }
+    
     switch (currentStep) {
       case 'name':
         updatedData.name = input;
         break;
       case 'email':
+        // Basic email validation
+        if (!input.includes('@') || !input.includes('.')) {
+          addBotMessage("That doesn't look like a valid email address. Please enter a valid email (e.g., name@example.com)");
+          return;
+        }
         updatedData.email = input;
         break;
       case 'company':
@@ -152,7 +290,6 @@ export const useOnboarding = () => {
     setOnboardingData(updatedData);
 
     // Determine next step
-    const flow = onboardingFlow[currentStep];
     const nextStep = flow.nextStep(updatedData, input);
 
     // Handle special cases

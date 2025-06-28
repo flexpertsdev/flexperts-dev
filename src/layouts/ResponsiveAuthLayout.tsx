@@ -5,14 +5,13 @@ import { MobileHeader } from '@/components/app/MobileHeader';
 import { DesktopSidebar } from '@/components/app/DesktopSidebar';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
 export const ResponsiveAuthLayout = () => {
   const isMobile = useIsMobile();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
-    <ProtectedRoute>
+    <>
       {isMobile ? (
         <div className="flex flex-col h-screen bg-gray-50">
           <MobileHeader />
@@ -35,6 +34,6 @@ export const ResponsiveAuthLayout = () => {
           </main>
         </div>
       )}
-    </ProtectedRoute>
+    </>
   );
 };

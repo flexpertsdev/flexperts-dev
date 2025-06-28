@@ -84,19 +84,18 @@ const Onboarding = () => {
           </div>
 
           {/* Input */}
-          {showInput && !hasOptions && !isTyping && (
-            <div className="p-4 border-t">
-              <ChatInput
-                onSend={handleUserInput}
-                placeholder={
-                  inputType === 'email' 
-                    ? "Enter your email address..." 
-                    : "Type your answer..."
-                }
-                disabled={isTyping}
-              />
-            </div>
-          )}
+          <div className="p-4 border-t">
+            <ChatInput
+              onSend={handleUserInput}
+              placeholder={
+                isTyping ? "Assistant is typing..." :
+                hasOptions ? "Choose an option above or type your message..." :
+                inputType === 'email' ? "Enter your email address..." : 
+                "Type your message..."
+              }
+              disabled={isTyping}
+            />
+          </div>
         </Card>
       </div>
     </div>
